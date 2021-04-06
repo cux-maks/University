@@ -2,8 +2,4 @@
 
 ###### KOREATECH COMPUTER SCIENCE & ENGINEERING JO BYEONGHA
 
-| Tables   |      Are      |  Cool |
-|----------|:-------------:|------:|
-| col 1 is |  left-aligned | $1600 |
-| col 2 is |    centered   |   $12 |
-| col 3 is | right-aligned |    $1 |
+### 2021년 1학기 시간표
