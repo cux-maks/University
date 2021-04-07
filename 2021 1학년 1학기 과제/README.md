@@ -21,4 +21,15 @@ print("x = ", x)
 print("y = ", y)
 ```
 
-#### 문제2. ![<me1.png>](https://github.com/cux-maks/B_HA/blob/main/2021%201%ED%95%99%EB%85%84%201%ED%95%99%EA%B8%B0%20%EA%B3%BC%EC%A0%9C/me1.png) 에서 x = 3일 때, 함수의 값을 계산하시오
+#### 문제2. ![<me1.png>](https://github.com/cux-maks/B_HA/blob/main/2021%201%ED%95%99%EB%85%84%201%ED%95%99%EA%B8%B0%20%EA%B3%BC%EC%A0%9C/me1.png) 에서 x = 3일 때, 함수의 값을 계산하시오.
+
+```python
+#값 계산
+num1 = 3*3*3 #첫 번째 항 계산
+num2 = 3*3*3 #두 번째 항 계산
+num3 = 7*3 #세 번째 항 계산
+num4 = 10 #네 번째 항 계산
+
+#최종 결과값
+print(num1+num2+num3+num4)
+```
