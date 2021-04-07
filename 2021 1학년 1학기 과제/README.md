@@ -21,4 +21,4 @@ print("x = ", x)
 print("y = ", y)
 ```
 
-#### 문제2. ![<me1.png>](<https://github.com/cux-maks/B_HA/blob/main/2021%201%ED%95%99%EB%85%84%201%ED%95%99%EA%B8%B0%20%EA%B3%BC%EC%A0%9C/me1.png>) 에서 x = 3일 때, 함수의 값을 계산하시오
+#### 문제2. ![<me1.png>](https://github.com/cux-maks/B_HA/blob/main/2021%201%ED%95%99%EB%85%84%201%ED%95%99%EA%B8%B0%20%EA%B3%BC%EC%A0%9C/me1.png) 에서 x = 3일 때, 함수의 값을 계산하시오
