@@ -73,12 +73,12 @@ while True:
     if keyboard.is_pressed("c"):
         t.circle(r)
 
-    if keyboard.is_pressed("k"):
+    if keyboard.is_pressed("l"):
         k += 0.1
         print('k =', k)
         tt.sleep(0.1)
 
-    if keyboard.is_pressed("l"):
+    if keyboard.is_pressed("k"):
         k -= 0.1
         print('k =', k)
         if k < 0:
