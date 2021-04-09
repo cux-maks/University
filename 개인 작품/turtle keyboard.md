@@ -2,10 +2,9 @@
 
 ```python
 import keyboard
-import turtle
+import turtle as t
 import time as T
 
-t = turtle.Turtle()
 t.shape("turtle")
 
 n = 1
