@@ -1,3 +1,107 @@
+# Turrle Graphics & keyboard Version 1.4
+
+```python
+import keyboard
+import turtle as t
+import time as tt
+
+t.shape("turtle")
+
+n = 1
+t.pensize(n)
+t.speed(0)
+
+t.penup()
+t.goto(-400, -400)
+t.pendown()
+t.goto(400, -400)
+t.goto(400, 400)
+t.goto(-400, 400)
+t.goto(-400, -400)
+t.penup()
+t.home()
+t.pendown()
+
+r = 0
+
+k = 0
+
+while True:
+    
+    if keyboard.is_pressed("w"):
+        t.setheading(90)
+        t.forward(k)
+    
+    if keyboard.is_pressed("a"):
+        t.setheading(180)
+        t.forward(k)
+        
+    if keyboard.is_pressed("s"):
+        t.setheading(270)
+        t.forward(k)
+        
+    if keyboard.is_pressed("d"):
+        t.setheading(0)
+        t.forward(k)
+
+    if keyboard.is_pressed("+"):
+        n += 1
+        tt.sleep(0.1)
+        print('n =', n)
+        t.pensize(n)
+
+    if keyboard.is_pressed("-"):
+        n -= 1
+        print('n =', n)
+        if n < 0:
+            n += 1
+        t.pensize(n)
+        tt.sleep(0.1)
+
+    if keyboard.is_pressed(","):
+        r -= 0.5
+        print('r =', r)
+        if r < 0:
+            r += 1
+        tt.sleep(0.1)
+
+    if keyboard.is_pressed("."):
+        r += 0.5
+        print('r =', r)
+        tt.sleep(0.1)
+
+    if keyboard.is_pressed("c"):
+        t.circle(r)
+
+    if keyboard.is_pressed("k"):
+        k += 0.1
+        print('k =', k)
+        tt.sleep(0.1)
+
+    if keyboard.is_pressed("l"):
+        k -= 0.1
+        print('k =', k)
+        if k < 0:
+            k += 0.1
+        tt.sleep(0.1)
+
+    if t.xcor() > 400:
+        t.setheading(180)
+        t.forward(k)
+
+    if t.xcor() < -400:
+        t.setheading(0)
+        t.forward(k)
+
+    if t.ycor() > 400:
+        t.setheading(270)
+        t.forward(k)
+
+    if t.ycor() < -400:
+        t.setheading(90)
+        t.forward(k)
+```
+
 # Turrle Graphics & keyboard Version 1.3
 
 ```python
