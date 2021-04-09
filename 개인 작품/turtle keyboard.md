@@ -1,5 +1,5 @@
 
-# Turtle Graphics & keyboard
+# Turtle Graphics & keyboard UPDATED Version 1.1
 
 ```python
 import keyboard
@@ -8,8 +8,20 @@ import turtle
 t = turtle.Turtle()
 t.shape("turtle")
 
-t.pensize(1)
+n = 1
+t.pensize(n)
 t.speed(0)
+
+t.penup()
+t.goto(-400, -400)
+t.pendown()
+t.goto(400, -400)
+t.goto(400, 400)
+t.goto(-400, 400)
+t.goto(-400, -400)
+t.penup()
+t.home()
+t.pendown()
 
 while True:
     
@@ -28,4 +40,34 @@ while True:
     if keyboard.is_pressed("d"):
         t.setheading(0)
         t.forward(1)
+
+    if keyboard.is_pressed("+"):
+        n += 1
+        t.pensize(n)
+
+    if keyboard.is_pressed("-"):
+        n -= 1
+        if n < 0:
+            n += 1
+        t.pensize(n)
+
+    if keyboard.is_pressed("c"):
+        t.circle(10)
+
+    if t.xcor() > 400:
+        t.setheading(180)
+        t.forward(1)
+
+    if t.xcor() < -400:
+        t.setheading(0)
+        t.forward(1)
+
+    if t.ycor() > 400:
+        t.setheading(270)
+        t.forward(1)
+
+    if t.ycor() < -400:
+        t.setheading(90)
+        t.forward(1)
+
 ```
