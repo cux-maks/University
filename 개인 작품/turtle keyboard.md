@@ -3,7 +3,7 @@
 ```python
 import keyboard
 import turtle as t
-import time as T
+import time as tt
 
 t.shape("turtle")
 
@@ -54,19 +54,19 @@ while True:
         if n < 0:
             n += 1
         t.pensize(n)
-        T.sleep(0.1)
+        tt.sleep(0.1)
 
     if keyboard.is_pressed(","):
         r -= 0.5
         print('r =', r)
         if r < 0:
             r += 1
-        T.sleep(0.1)
+        tt.sleep(0.1)
 
     if keyboard.is_pressed("."):
         r += 0.5
         print('r =', r)
-        T.sleep(0.1)
+        tt.sleep(0.1)
 
     if keyboard.is_pressed("c"):
         t.circle(r)
