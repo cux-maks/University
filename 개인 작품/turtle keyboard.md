@@ -1,4 +1,4 @@
-# Turtle Graphics & keyboard Version 1.9
+# Turtle Graphics & keyboard (python) Version 2.0
 
 ```python
 import keyboard
@@ -224,7 +224,7 @@ while True:
         t.forward(k)
 ```
 
-# Turtle Graphics & keyboard Version 1.8
+# Turtle Graphics & keyboard (python) Version 1.9
 
 ```python
 import keyboard
@@ -385,7 +385,7 @@ while True:
         t.forward(k)
 ```
 
-# Turtle Graphics & keyboard Version 1.7
+# Turtle Graphics & keyboard (python) Version 1.8
 
 ```python
 import keyboard
@@ -533,7 +533,7 @@ while True:
         t.forward(k)
 ```
 
-# Turtle Graphics & keyboard Version 1.6
+# Turtle Graphics & keyboard (python) Version 1.7
 
 ```python
 mport keyboard
@@ -674,7 +674,7 @@ while True:
 
 ```
 
-# Turtle Graphics & keyboard Version 1.5
+# Turtle Graphics & keyboard (python) Version 1.6
 
 ```python
 import keyboard
@@ -787,7 +787,7 @@ while True:
         t.forward(k)
 ```
 
-# Turtle Graphics & keyboard Version 1.4
+# Turtle Graphics & keyboard (python) Version 1.5
 
 ```python
 import keyboard
@@ -891,7 +891,7 @@ while True:
         t.forward(k)
 ```
 
-# Turrle Graphics & keyboard Version 1.3
+# Turrle Graphics & keyboard (python) Version 1.4
 
 ```python
 import keyboard
@@ -981,7 +981,7 @@ while True:
         t.forward(1)
 ```
 
-# Turrle Graphics & keyboard Version 1.3
+# Turrle Graphics & keyboard (python) Version 1.3
 
 ```python
 import keyboard
@@ -1063,7 +1063,7 @@ while True:
         t.forward(1)
 ```
 
-# Turrle Graphics & keyboard Version 1.2
+# Turrle Graphics & keyboard (python) Version 1.2
 
 ```python
 import keyboard
@@ -1162,7 +1162,7 @@ while True:
         t.forward(1)
 ```
 
-# Turtle Graphics & keyboard Version 1.1
+# Turtle Graphics & keyboard (python) Version 1.1
 
 ```python
 import keyboard
@@ -1234,7 +1234,7 @@ while True:
         t.forward(1)
 
 ```
-# Turtle Graphics & keyboard Version 1.0
+# Turtle Graphics & keyboard (python) Version 1.0
 
 ```python
 import keyboard
