@@ -938,3 +938,228 @@ for i in range(0, G_num): # 게임 횟수만큼 반복하여 누가 이겼는지
     print('{}번째 결과: {}'.format(i+1, win[i]))
    
 ```
+
+
+## 과제 7
+#### 문제 1. Python에서는 함수가 튜플을 반환하게 하면 함수가 여러 개의 값을 동시에 반환할 수 있다. 튜플을 반환하게 하여 여러 개의 값을 동시에 반환할 수 있는 함수를 정의하고, 이 함수를 이용하여 결과를 출력하는 프로그램을 작성하시오.
+ - (예시로 작성한 원의 넓이/둘레는 사용하지 말 것!!)
+ - (입력 예시) 원의 반지름(r) 입력 : 5
+ - (출력 예시) 원의 넓이 : 314.159 / 원의 둘레 : 62.831
+ - (소스 코드 예시)
+ ```python
+def calcircle(r):
+      area = math.pi * r * r
+      circum = 2 * math.pi * r
+      return (area, circum)  ------> 2개의 값을 튜플로 만들어서 반환
+  .....(이하 생략)
+```
+
+```python
+def something(a, b): # 입력한 두 숫자의 몫과 나머지를 구하여 튜플로 반환하는 함수를 선언한다.
+    quotient = a//b
+    remainder = a%b
+    return (quotient, remainder)
+
+num1, num2 = input('몫과 나머지를 구할 두 수를 입력하세요 : ').split() # 두 숫자를 입력하여 각각 num1, num2에 할당한다.
+
+print(something(int(num1), int(num2))) # 위에서 만든 함수에 입력한 두 숫자를 입력하여 튜플로 된 결과값을 출력한다.
+```
+
+#### 문제 2. 사용자 입력을 통해서 딕셔너리로 구성된 리스트를 만드는 프로그램을 작성하시오.
+- (입출력 예시) 딕셔너리로 구성된 리스트를 만드는 프로그램 입니다.
+- 아래 번호를 선택하세요.
+- 1 : 딕셔너리 생성하기 || 2 : 프로그램 종료
+- 번호선택 : 1
+- -----딕셔너리 요소 추가 중 ...-----
+- key 입력 : kim
+- value 입력 : 01012345678
+
+- 1 : 딕셔너리 생성하기 || 2 : 프로그램 종료
+- 번호선택 : 1
+- -----딕셔너리 요소 추가 중 ...-----
+- key 입력 : hwang
+- value 입력 : 01055553333
+
+- 1 : 딕셔너리 생성하기 || 2 : 프로그램 종료
+- 번호선택 : 2
+- -----딕셔너리 요소 추가 종료 ...-----
+
+- (입출력 예시) 딕셔너리로 구성된 리스트를 만드는 프로그램 입니다.
+- 아래 번호를 선택하세요.
+- 1 : 딕셔너리 생성하기 || 2 : 프로그램 종료
+- 번호선택 : 1
+- -----딕셔너리 요소 추가 중-----
+- key 입력 : lee
+- value 입력 : 01014853697
+
+- 1 : 딕셔너리 생성하기 || 2 : 프로그램 종료
+- 번호선택 : 2
+- -----딕셔너리 요소 추가 종료 ...-----
+
+- (입출력 예시) 딕셔너리로 구성된 리스트를 만드는 프로그램 입니다.
+- 아래 번호를 선택하세요.
+- 1 : 딕셔너리 생성하기 || 2 : 프로그램 종료
+- 번호선택 : 2
+- -----딕셔너리 요소 추가 종료 ...-----
+
+- 내가 만든 딕셔너리 리스트 : [{'kim': '01012345678', 'hwang': '01055553333'}, {'lee': '01014853697}]
+
+```python
+custom_dict = {} # 딕셔너리 변수를 미리 생성한다.
+
+while True: # 특정 상황이 될 때 까지 반복한다.
+    print('딕셔너리로 구성된 리스트를 만드는 프로그램 입니다.')
+    print('아래 번호를 선택하세요.')
+    print('1. 딕셔너리 생성하기 || 2. 프로그램 종료') # 프로그램 안내 및 번호 선택 안내 메시지를 출력한다.
+
+    num = int(input('')) # 1 또는 2를 입력받는다.
+
+    if num == 2 and before_num != 2: # 연속으로 2가 입력된 경우가 아닐 때
+        before_num = num # 방금 입력한 값을 저장하고 
+        print('----딕셔너리 요소 추가 종료...----') # 딕셔너리 요소 추가를 종료한다.
+    elif num == 2 and before_num == 2: # 딕셔너리 요소 추가를 종료한 상태에서 2를 입력할 경우
+        print('내가 만든 딕셔너리 리스트: [{}]'.format(custom_dict)) # 내가 만든 딕셔너리를 출력한 후
+        break # 프로그램을 종료한다.
+    elif num == 1: # 그게 아니라 그냥 1을 입력한 경우
+        before_num = num # 방금 입력한 값을 저장하고
+        print('----딕셔너리 요소 추가중...----') # 딕셔너리 요소 추가 과정을 밟는다.
+        key = input('key 입력: ') # key를 입력하고
+        value = input('value 입력: ') # value를 입력하고
+        custom_dict[key] = value # 입력한 key, value를 맨 처음 생성한 custom_dict에 저장한다.
+```
+
+#### 문제 3. 사용자가 입력한 문자열을 다음과 같이 출력하는 프로그램을 작성하시오.
+- 규칙 - 입력받은 문자열을 하나씩 탐색하여 연속하여 나타나는 동일 문자의 개수를 출력
+- (입력 예시) bbaaggteeef
+- (출력 예시) b2a2g2t1e3f1
+
+```python
+def str_calc(a): # 입력한 문자열을 리스트로 변환하여 이 함수에 대입했을 때, 연속으로 중복인 문자를 삭제하고 하나씩만 남긴 값을 리턴하는 함수를 선언한다. ex) aabbccdd -> abcd 
+    return_value = ''
+    return_value += a[0]
+    for i in range(1, len(a)):
+        if a[i-1] != a[i]:
+            return_value += a[i]
+    return return_value
+
+value_input = input('') # 문자열을 입력받는다.
+value_list = list(value_input) # 입력받은 문자열을 리스트로 변환한다
+
+value_result = '' # 최종 출력에 사용할 문자열 변수를 생성한다.
+value_result += value_list[0] # 최종 출력에 사용할 문자열 변수에 입력받은 문자열의 맨 첫 글자를 추가한다.
+
+count = 1 # 연속된 문자가 몇 개 있는지 카운트하는 변수에 1을 할당한다.
+count_list = [0 for i in range(len(str_calc(value_input)))] # 해당 카운트를 순서대로 저장하기 위해 위의 함수에 대입하여 얻은 최종 문자열의 길이를 크기로 한 리스트를 생성한 후 전부 0으로 채운다.
+
+for i in range(1, len(value_input)): # 입력한 문자열의 길이만큼 반복하여
+
+    if value_list[i-1] != value_list[i]: # 만약 연속한 문자열이 서로 다르다면
+        count_list[len(value_result)-1] = count # 지금까지의 카운트를 리스트의 해당 인덱스 위치에 저장한다.
+        count = 1 # 그리고 변수는 1로 초기화한다.
+        value_result += value_list[i] # 최종 출력에 사용할 문자열에 뒤에 이어지는 다른 문자를 추가한다.
+    else: # 그게 아니라면
+        count += 1 # 카운트를 1씩 증가시킨다.
+count_list[len(value_result)-1] = count # 맨 마지막 문자의 개수를 리스트의 맨 마지막 위치에 저장한다.
+
+for i in range(len(count_list)): # 카운트 리스트의 길이만큼 반복하여
+    print('{}{}'.format(list(value_result)[i], count_list[i]), end = '') # 문자와 문자의 개수를 포멧에 맞게 출력한다.
+ ```
+ 
+ #### 문제 4. 사용자가 입력한 문장에서 문자와 숫자를 구별하여 각각의 개수를 출력하는 프로그램을 작성호시오.
+- 공백 및 특수문자는 고려하지 않아도 됨.
+- (입력 예시) 2021136001 HongGilDong 01012345678
+- (출력 예시) 입력한 문장에서 문자는 11개 입니다.
+-             입력한 문장에서 숫자는 21개 입니다.
+
+```python
+value = input('') # 문장을 입력한다.
+value_list = list(value) # 입력한 문장을 value_list라는 리스트에 저장한다.
+
+length = len(value) # 문장의 길이를 length에 저장한다.
+
+s = 0 # 문자의 개수
+n = 0 # 숫자의 개수
+
+for i in range(length): # 문자열의 길이 만큼 반복하여
+    if value_list[i].isalnum() or value_list[i] != ' ': # 리스트의 해당 인덱스에 공백 또는 특수문자가 없을 경우
+        if value_list[i].isalpha(): # 리스트의 해당 인덱스가 문자열이라면
+            s += 1 # 문자 변수를 1씩 증가시키고
+        else: # 문자열이 아니면
+            n += 1 # 숫자 변수를 1씩 증가시킨다.
+
+print('입력한 문장에서 문자는 {}개 입니다. \n입력한 문장에서 숫자는 {}개 입니다.'.format(s, n)) # 문자의 개수 변수와 숫자의 개수 변수를 포멧에 맞게 출력한다.
+```
+
+#### 문제 5. 사용자가 입력한  URL주소를 protocol, host, 나머지(path, querystring, ...)로 구분하여 출력하는 프로그램을 작성하시오.
+| | | |
+|:---:|:---:|:---:|
+|(입력 예시)|https://www.naver.com|https://namu.wiki/w/Python|
+|(출력 예시)|protocol : https <br> host : www.naver.com|protocol : https <br> host : namu.wiki <br> others : w/Python|
+
+```python
+url = input('') # url주소를 입력받는다.
+url_list = list(url) # 입력한 rul주소를 리스트 형태로 저장한다.
+
+url_1 = 0 # protocol을 저장할 변수 생성
+url_2 = 0 # host를 저장할 변수 생성
+url_3 = 0 # others를 저장할 변수 생성
+
+length = len(url) # 입력한 url 주소의 길이를 length에 저장
+
+for i in range(length-2): # url 주소의 길이만큼 반복하여
+
+    if '{}'.format(url_list[i]+url_list[i+1]+url_list[i+2]) == '://': # 만약 해당 리스트의 i, i+1, i+2번째 가 :// 라면
+
+        url_1 = url[0:i] # protocol은 i번째 인덱스 전 까지의 문자열이고
+
+        for j in range(i+3, length): # i+3번째 문자열 부터 끝까지 반복하는데
+            if '/' in url[i+3:]: # i+3번째 문자열 부터 끝까지 중에 / 가 존재한다면
+                if url_list[j] == '/': # / 를 찾아 이를 기준으로
+
+                    url_2 = url[i+3:j] # 앞부분은 host
+                    url_3 = url[j+1:] # 뒷부분은 others 에 저장하고
+
+                    break # 반복을 종료한다.
+            else: # 안들어 있으면
+
+                url_2 = url[i+3:] # i+3번째 문자열부터 끝까지 host 에 저장하고
+                url_3 = 0 # others는 0으로 설정한다.
+
+        print('protocol: {}'.format(url_1)) # protocol을 출력하고
+        print('host: {}'.format(url_2)) # host를 출력하고
+
+        if url_3 != 0: # 만약 others가 0이 아니라면 others도 출력해준다.
+            print('others: {}'.format(url_3))
+
+        break # 그리고 맨 처음 반복문을 종료한다.
+```
+
+#### 문제 6. 사용자가 입력한 숫자를 문자열로 취급하여 문자열 내에서 다음과 같은 규칙에 맞게 출력하는 프로그램을 작성하시오.
+- 규칙
+- 홀수가 연속적으로 나오면 해당 두 수 사이에 '-' 추가
+- 짝수가 연속적으로 나오면 해당 두 수 사이에 '+' 추가
+- (입력 예시) 1123465
+- (출력 예시) '1-1234+65'
+
+```python
+odd_num = ['1', '3', '5', '7', '9'] # 홀수 리스트를 생성한다.
+even_num = ['0', '2', '4', '6', '8'] # 짝수 리스트를 생성한다.
+
+num_str = input('') # 숫자를 문자열로 입력한다.
+num_list = list(num_str) # 입력한 문자열을 리스트로 변환하여 저장한다.
+num_value = {} # 두수 사이에 - 또는 +를 추가 하기 위하여 딕셔너리 변수를 생성한다.
+
+length = len(num_str) # 입력한 문자열의 길이를 length 변수에 저장한다.
+
+for i in range(length-1): # 문자열의 길이보다 1 만큼 작게 반복하여
+    if num_list[i] in odd_num and num_list[i+1] in odd_num: # 만약 i번째 문자열과 i+1번째 문자열이 둘 다 홀수 리스트 안에 있다면
+        num_value[i] = '-' # num_value 딕셔너리 변수에 해당 위치인 i와 - 를 저장하고
+    elif num_list[i] in even_num and num_list[i+1] in even_num: # 만약 i 번째 문자열과 i+1번째 문자열이 둘 다 짝수 리스트 안에 있다면
+        num_value[i] = '+' # num_value 딕셔너리 변수에 해당 위치인 i와 + 를 저장한다.
+
+for i in range(length): # 입력한 문자열의 길이만큼 반복하여
+    print(num_list[i], end = '') # 문자열을 줄바꿈, 공백 없이 출력하는데
+    for key, value in num_value.items(): # num_value 딕셔너리 변수의 값을 하나씩 불러왔을 때, 
+        if key == i: # key값과 i값이 같다면, 
+            print(value, end = '') # key에 해당하는 딕셔너리 변수의 값을 출력한다.
+```
