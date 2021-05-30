@@ -1163,3 +1163,419 @@ for i in range(length): # 입력한 문자열의 길이만큼 반복하여
         if key == i: # key값과 i값이 같다면, 
             print(value, end = '') # key에 해당하는 딕셔너리 변수의 값을 출력한다.
 ```
+
+## 과제 7
+#### 문제 1. 학생의 개인정보 메소드를 갖는 클래스를 정의하고, 사용자로부터 데이터를 입력받아 출력하는 프로그램을 작성하시오.
+- 입력받는 데이터는 이름, 학번, 휴대폰 번호, 이메일, 주소이며 다른 항목으로 변경해도 상관 없음
+```python
+class stu_info:
+    def __init__(self, name, stu_num, ph_num, email, addr): # 생성자
+        ... # 인스턴스 변수 정의 및 초기화
+    def print_info(self): # 개인정보 출력
+        ...
+```
+- 학생 정보 입력 방식: 사용자로부터 데이터를 입력받은 후 객체 생성 -> 인자 값으로 넘김
+
+```python
+class stu_info: # 학생의 개인정보를 입력 받을 떄 사용하는 클래스를 생성한다.
+    def __init__(self, name, stu_num, ph_num, email, addr): # 생성자의 인자를 이름, 학번, 폰번호, 이메일, 주소 로 설정한다.
+        self.name = name # 이름은 이름
+        self.stu_num = stu_num # 학번은 학번
+        self.ph_num = ph_num # 전화번호는 전화번호
+        self.email = email # 이메일은 이메일
+        self.addr = addr # 주소는 주소에 저장한다.
+    def print_info(self): # 입력한 개인정보를 출력한다.
+        print("\n\n이름: {}\n학번: {}\n전화번호: {}\n이메일: {}\n주소: {}".format(self.name, self.stu_num, self.ph_num, self.email, self.addr))
+        
+students = [] # 학생의 이름을 저장할 리스트를 생성한다.
+
+num = int(input('학생 수를 입력해 주세요: ')) # 학생의 수를 입력한다.
+
+for i in range(num): # 학생의 수 만큼 반복하여
+    students.append(input('학생{}의 이름을 입 력해 주세요: '.format(i+1))) # 학생의 이름
+    stu_num = int(input('학생{}의 학번을 입력하세요: '.format(i+1))) # 학번
+    ph_num = int(input('학생{}의 전화번호를 입력하세요: '.format(i+1))) # 전화번호
+    email = input('학생{}의 이메일을 입력하세요: '.format(i+1)) # 이메일
+    addr = input('학생{}의 주소를 입력하세요: '.format(i+1)) # 주소를 입력하여
+    students[i] = stu_info(students[i], stu_num, ph_num, email, addr) # 클래스의 인자값으로 전달한다.
+
+for i in range(num): # 학생의 수 만큼 반복하여
+    students[i].print_info() # 저장한 개인정보를 출력한다.
+```
+
+#### 문제 2. 사각형의 면적을 계산하는 메소드를 갖는 클래스를 정의하고, 가로와 세로 값을 입력 받아 사각형의 면적을 출력하는 프로그램을 작성하시오.
+- 단, 가로, 세로 값을 저장하는 변수는 private변수로 할 것.
+```python
+class Rectangle:
+    def __init__(self): # 생성자
+        ... # 인스턴스 변수 정의 및 초기화
+    def width(self): # 가로 값 입력 메소드
+        ... # 가로 값 입력
+    def height(self): # 세로 값 입력 메소드
+        ... # 세로 값 입력
+    def area(self): # 사각형 면적 계산 메소드
+        ... # 사각형 면적 계산 후 반환
+```
+
+```python
+class Rectangle: # 사각형의 넓이를 계산할 떄 사용할 클래스 생성
+    __privateW = 0 # 가로를 private 변수로 선언
+    __privateH = 0 # 세로를 private 변수로 선언 
+    def width(self, w): # 입력받은 가로를 __privateW에 저장한다
+        self.__privateW = w
+    def height(self, h): # 입력받은 세로를 __privateH에 저장한다
+        self.__privateH = h
+    def area(self): # 사각형의 넓이를 반환한다
+        return self.__privateW*self.__privateH
+
+a = Rectangle() # 클래스 객체를 지정해준다
+a.width(float(input('가로: '))) # 가로를 입력하여 클래스에 전달한다
+a.height(float(input('세로: '))) # 세로를 입력하여 클래스에 전달한다
+print(a.area()) # 클래스에서 계산한 넓이값을 출력한다
+```
+
+#### 문제 3. 차량 정보 메소드를 갖는 클래스를 정의하고, 연료 및 주행거리 데이터를 입력받아 차량 상태 변화를 출력하는 프로그램을 작성하시오.
+- 조건
+- 객체 생성 시 차 이름, 연비, 연료 탱크 최대 용량을 인자 값으로 설정
+- 연료량에 따라 주행가능 거리가 계산되며, 주행거리에 따라 남은 연료량 및 주행가능거리, 누적 주행거리가 계산됨
+- 연료 주입 시 최대 용량을 넘어서는 경우 경고 메시지 출력 : 현재 연료 주입 가능 용량은 ?? L 입니다. 다시 입력해 주세요.
+- 주행거리 입력 시 주행가능 거리보다 긴 경우 경고 메시지 출력 : 현재 주행가능 거리는  00 Km입니다. 다시 입력해 주세요.
+
+```python
+class My_Car:
+    def __init__(self, c_name, c_dfficiency, c_maxtank): # 생성자
+        ... # 인스턴스 변수 정의 및 초기화
+    def chargeFuel(self, fuel): # 연료 충전
+        ... # 충전 후 연료량 계산, 총 용량 넘는 경우 경고 메시지
+    def car_drive(self, dist): # 차량 주행
+        ... # 주행거리 이동 후 누적 주행거리 및 남은 연료 계산
+        ... # 주행가능거리를 넘는 경우 경고 메시지
+    def drivingDistance(self): # 주행 가능 거리
+        ... # 주행 가능 거리 계산 (연료 * 연비)
+    def car_info(self): # 차량 정보 출력
+        ... # 연료량, 연비, 주행가능거리, 누적 주행거리 출력
+```
+- (입/출력 예시)
+- ------------ [My Car 차량 정보] ------------
+-    연료량        :     0/100L
+-    연비          :     20 km / liter
+-    주행가능거리   :     0 km
+-    누적주행거리   :     0 km
+-   ------------------------------------------
+-   메뉴를 입력하세요.(1 : 연료 주입 / 2 : 주행거리 입력 / 3 : 프로그램 종료) : 1
+
+-   연료량 입력 : 50
+-    ------------ [My Car 차량 정보] ------------
+-    연료량        :     50/100L
+-    연비          :     20 km / liter
+-    주행가능거리   :     1000 km
+-    누적주행거리   :     0 km
+-    ------------------------------------------
+
+-     메뉴를 입력하세요.(1 : 연료 주입 / 2 : 주행거리 입력 / 3 : 프로그램 종료) : 2      
+-    주행 거리 입력 : 200
+-    ------------ [My Car 차량 정보] ------------
+-    연료량        :     40/100L
+-    연비          :     20 km / liter
+-    주행가능거리   :     800 km
+-    누적주행거리   :     200 km
+-    ------------------------------------------
+
+-     메뉴를 입력하세요.(1 : 연료 주입 / 2 : 주행거리 입력 / 3 : 프로그램 종료) : 3
+
+-    프로그램이 종료되었습니다.
+
+```python
+class Car(): # 차량 정보 메소드를 갖는 클래스를 정의한다.
+
+    def __init__(self, name, difficiency, maxtank): # 필요한 인자들을 설정하여 각 필요한 변수에 할당한다.
+
+        self.now = 0
+        self.name = name
+        self.difficiency = difficiency
+        self.maxtank = maxtank
+        self.distanceM = 0
+        self.candistance = self.now*self.difficiency
+
+    def chargeFuel(self, fuel): # 연료 주입 메서드를 정의한다. 만일 연료가 주입 가능 용량 이상으로 입력될 경우 오류 메시지를 출력하고 연료가 주입되지 않은 상태로 되돌린다. 이후 차량 정보를 출력한다.
+
+        self.now = self.now + fuel
+        if self.now > self.maxtank:
+            print('현재 연료 주입 가능 용량은 {}L 입니다. 다시 입력해 주세요.'.format(self.maxtank - self.now))
+            self.now = self.now - fuel
+        self.info()
+
+    def drive(self, dist): # 주행 거리 메서즈를 정의한다. 만일 주행 거리가 주행 가능 거리 이상으로 입력될 경우 오류 메시지를 출력하고 주행하지 않은 상태로 되돌린다. 이후 차량 정보를 출력한다. 그게 아니라 정삭 작동 한다면, 주행후 남은 연료량을 계산하여 저장하고 차량 정보를 출력한다.
+        
+        self.distanceM += dist
+        if dist > self.difficiency*self.now:
+            print('현재 주행 가능 거리는 {}Km 입니다. 다시 입력해 주세요.'.format(self.difficiency*self.now))
+            self.distanceM -= dist
+        else:
+            self.now = self.now - (1/(self.difficiency/dist))
+        self.info()
+
+    def distance(self): # 현재 주행 가능 거리를 계산한다.
+        
+        self.candistance = self.difficiency*self.now
+        return self.candistance
+
+    def info(self): # 현재 차량의 정보를 출력한다.
+
+        print('----------[{}차량 정보]----------'.format(self.name))
+        print('연료량: {}/{} L'.format(self.now, self.maxtank))
+        print('연비: {} Km / Liter'.format(self.difficiency))
+        print('주행가능거리: {} Km'.format(self.difficiency*self.now))
+        print('누적주행거리: {} Km'.format(self.distanceM))
+
+car = Car('My Car', 20, 100) # 차량 클래스에 car 객체를 할당한다.
+
+car.info() # 차량 정보를 출력한다.
+
+while True: # 반복한다.
+
+    num = int(input('메뉴를 입력하세요.(1. 연료 주입 / 2. 주행거리 입력 / 3.프로그램 종료 ')) # 메뉴를 선택하고
+
+    if num == 1: # 연료 주입이라면 연료량을 입력하여 클래스에 전달한다.
+        car.chargeFuel(int(input('연료량 입력: ')))
+    elif num == 2: # 주행거리 입력이라면 주행거리를 입력하여 클래스에 전달한다.
+        car.drive(int(input('주행 거리 입력: ')))
+    elif num == 3: # 프로그램 종료라면 프로그램 종료 메시지를 띄우고 프로그램을 종료한다.
+        print('프로그램이 종료되었습니다.')
+        break
+```
+
+#### 문제 4. 은행에서 계좌를 개설하면 은행이름, 예금주, 계좌번호, 잔액이 설정된다. 계좌 개설 정보 메소드를 갖는 클래스를 정의하시오. 
+- (아래 조건에 있는 내용이 모두 포함되어야함)
+- 조건
+- 은행이름 : 신한은행
+- 계좌번호 : 3자리 – 3자리 – 6자리 형태로 랜덤하게 생성
+- (랜덤 값 범위 - 3자리 : 0 ~ 999 / 6자리 : 0 ~ 999999)- 3자리 랜덤 값 : 1 경우 001로 표시되어야 함
+- (3자리 랜덤 값 : 35 경우 035 / 6자리 : 123 경우 000123)
+```python
+   class Account:
+      def __init__(self):    # 생성자
+          self.name = 본인이름
+          self.balance = 10000
+          self.bank = “신한은행”
+          self.account_number = ?
+              ...
+```
+
+```python
+import random as r # 계좌번호 생성시 필요한 랜덤 모듈 불러온다.
+
+class Account: # 계좌개설 클래스를 생성한다.
+    def __init__(self, name): # 계좌번호가 랜덤하게 생성되는 메서드를 생성한다.
+        self.name = name # 계좌주인의 이름은 인자를 통해 입력받는다.
+        self.balance = 10000 # 잔액
+        self.bank = '신한은행' # 은행 이름
+        self.account_number = str('{:03d}-{:03d}-{:06d}'.format(r.randint(0, 999), r.randint(0, 999), r.randint(0, 999999))) # 랜덤하게 생성되는 계좌번호 이다.
+
+    def info(self): # 계좌정보를 출력하는 메서드를 생성한다.
+        print('이름: {}'.format(self.name)) # 순서대로 이름
+        print('은행이름: {}'.format(self.bank)) # 은행이름
+        print('잔액: {}'.format(self.balance)) # 잔액
+        print('계좌번호: {}'.format(self.account_number)) # 계좌번호 순이다.
+
+value = input('이름을 입력하세요: ') # value라는 변수에 계좌 개설자의 이름을 입력한다.
+value = Account(value) # 입력한 이름을 Account 클래스의 인수로 주면서 Account클래스에 value 객체를 할당한다.
+value.info() # value객체에 대하여 계좌정보를 출력한다.
+```
+
+#### 문제 5. 계좌 개설 클래스에서 입/출금을 위한 메소드를 추가하시오.
+- 조건
+- 입금 시 1,000원 이하 일 경우 경고 메시지 출력
+- (최소 1,000원 이상 입금이 가능합니다. 다시 입력해주세요.)
+- 출금 시 잔액이 부족할 경우 경고 메시지 출력
+- (금액이 부족합니다. 다시 입력해주세요.)
+```python
+   class Account:
+      def __init__(self):    # 생성자
+          self.name = 본인이름
+          self.balance = 10000
+          self.bank = “신한은행”
+          self.account_number = ?
+              ...
+
+      (추가) def deposit(self, amount):    # 입금
+              ...    # 입금 시 잔고 계산
+
+      (추가) def withdraw(self, amount):   # 출금
+              ...   # 출금 시 잔고 계산
+```
+
+```python
+import random as r # 계좌번호 생성시 필요한 랜덤 모듈 불러온다.
+
+class Account: # 계좌개설 클래스를 생성한다.
+    def __init__(self, name): # 계좌번호가 랜덤하게 생성되는 메서드를 생성한다.
+        self.name = name # 계좌주인의 이름은 인자를 통해 입력받는다.
+        self.balance = 10000 # 잔액
+        self.bank = '신한은행' # 은행 이름
+        self.account_number = str('{:03d}-{:03d}-{:06d}'.format(r.randint(0, 999), r.randint(0, 999), r.randint(0, 999999))) # 랜덤하게 생성되는 계좌번호 이다.
+
+    def info(self): # 계좌정보를 출력하는 메서드를 생성한다.
+        print('이름: {}'.format(self.name)) # 순서대로 이름
+        print('은행이름: {}'.format(self.bank)) # 은행이름
+        print('잔액: {}'.format(self.balance)) # 잔액
+        print('계좌번호: {}'.format(self.account_number)) # 계좌번호 순이다.
+    
+    def deposit(self, amount): # 입금 메서드를 생성한다.
+        if amount <= 1000: # 입금 금액이 1000원 이하이면
+            print('최소 1000원 이상 입금이 가능합니다. 다시 입력해 주세요.') # 오류 메시지를 출력한다.
+        else: # 그게 아니라면
+            self.balance += amount # 잔액에 입금 금액을 추가하고
+            print('입금이 완료되었습니다.') # 입금 완료 메시지와
+            print('입금 후 잔액: {}'.format(self.balance)) # 잔액을 출력한다.
+
+    def withdraw(self, amount): # 출금 메서드를 생성한다.
+        if amount > self.balance: # 출금 금액이 잔액보다 많으면
+            print('금액이 부족합니다. 다시 입력해 주세요.') # 오류 메시지를 출력한다.
+        else: # 그게 아니라면
+            self.balance -= amount # 잔액에서 출금 금액을 빼고
+            print('{}원이 출금되었습니다.'.format(amount)) # 출금 금액과
+            print('출금 후 잔액: {}'.format(self.balance)) # 잔액을 출력한다.
+
+value = input('이름을 입력하세요: ') # value라는 변수에 계좌 개설자의 이름을 입력한다.
+value = Account(value) # 입력한 이름을 Account 클래스의 인수로 주면서 Account클래스에 value 객체를 할당한다.
+value.info() # value객체에 대하여 계좌정보를 출력한다.
+
+while True: # 출금과 입금을 계속하기 위해 반복하는데
+    num = int(input('메뉴를 선택해 주세요\n1. 입금 / 2. 출금 / 3. 종료\n')) # 출금과 입금, 종료 중 어느것을 할 지 선택한다.
+    if num == 1: # 만약 입금을 선택했다면
+        price = int(input('입금할 금액을 입력해 주세요.\n')) # 입금할 금액을 입력하고
+        value.deposit(price) # value에 대하여 deposit메서드에 price를 전달한다.
+    elif num == 2: # 출금을 선택했다면
+        price = int(input('출금할 금액을 입력해 주세요\n')) # 출금할 금액을 입력하고
+        value.withdraw(price) # value에 대하여 withdraw메서드에 price를 전달한다.
+    elif num == 3: # 종료를 선택했다면
+        print('거래를 종료합니다.') # 종료메시지와 함께
+        break # 반복문을 탈출한다
+```
+
+#### 문제 6. 입금 메소드에 아래와 같은 조건을 추가하고, 계좌 정보를 출력하는 메소드를 추가하여 최종적으로 개좌 정보, 입/출금 후 계좌 정보를 출력하는 프로그램을 완성하시오.
+- 조건
+- 입금 횟수가 5회가 될 때 잔고를 기준으로 2%의 이자가 잔고에 
+- 추가되도록 코드를 작성하시오.(5회, 10회, 15회 ~ )
+- 잔고 출력 시 세자리마다 쉼표 출력(예 : 15000원 --> 15,000원)
+
+```python
+   class Account:
+      def __init__(self):    # 생성자
+          self.name = 본인이름
+          self.balance = 10000
+          self.bank = “신한은행”
+
+      def deposit(self, amount):    # 입금
+              ...  # 이자 지급 조건 추가
+
+      def withdraw(self, amount):   # 출금
+              ...
+
+      (추가) def display_info(self):    # 계좌 정보 출력
+              ...        # 은행이름, 예금주, 계좌번호, 입출금 내역, 잔고
+```
+
+- (입/출력예시) 
+-    ------------ 계좌 정보 ------------
+-    은행이름 : 신한은행 
+-    예금주 : 홍길동
+-    계좌번호 : 110-345-678912
+-    잔액 : 100,000원
+-    ----------------------------------
+
+-    메뉴를 선택하세요.(입금 : d / 출금 : w / 종료 : n) : d
+-    입금 금액 : 1000
+-    입금 처리되었습니다. 
+
+-    ------------ 계좌 정보 ------------
+-    은행이름 : 신한은행 
+-    예금주 : 홍길동
+-    계좌번호 : 110-345-678912
+-    잔액 : 101,000원
+-    ----------------------------------
+
+-    메뉴를 선택하세요.(입금 : d / 출금 : w / 종료 : n) : d
+-    출금 금액 : 10000
+-    출금 처리되었습니다.
+
+-    ------------ 계좌 정보 ------------
+-    은행이름 : 신한은행 
+-    예금주 : 홍길동
+-    계좌번호 : 110-345-678912
+-    잔액 : 91,000원
+-    ----------------------------------
+
+-    메뉴를 선택하세요.(입금 : d / 출금 : w / 종료 : n) : n
+
+-    프로그램이 종료되었습니다.
+
+```python
+import random as r # 계좌번호 생성시 필요한 랜덤 모듈 불러온다.
+
+class Account: # 계좌개설 클래스를 생성한다.
+    def __init__(self, name): # 계좌번호가 랜덤하게 생성되는 메서드를 생성한다.
+        self.name = name # 계좌주인의 이름은 인자를 통해 입력받는다.
+        self.balance = 10000 # 잔액
+        self.bank = '신한은행' # 은행 이름
+        self.account_number = str('{:03d}-{:03d}-{:06d}'.format(r.randint(0, 999), r.randint(0, 999), r.randint(0, 999999))) # 랜덤하게 생성되는 계좌번호 이다.
+        self.history = {} # 입출금 내역을 저장할 딕셔너리를 생성한다.
+        self.cnt_1 = 0 # 입금 횟수를 저장할 변수를 생성한다.
+        self.cnt_2 = 0 # 출입금 횟수를 저장할 변수를 생성한다.
+
+    def info(self): # 계좌정보를 출력하는 메서드를 생성한다.
+        print('이름: {}'.format(self.name)) # 순서대로 이름
+        print('은행이름: {}'.format(self.bank)) # 은행이름
+        print('잔액: {}'.format(self.balance)) # 잔액
+        print('계좌번호: {}'.format(self.account_number)) # 계좌번호 순이다.
+    
+    def deposit(self, amount): # 입금 메서드를 생성한다.
+        if amount <= 1000: # 입금 금액이 1000원 이하이면
+            print('최소 1000원 이상 입금이 가능합니다. 다시 입력해 주세요.') # 오류 메시지를 출력한다.
+        else: # 그게 아니라면
+            self.cnt_2 += 1 # 입금 할 때마다 cnt_2를 1씩 증가시킨다.
+            self.cnt_1 += 1 # 입금 할 때마다 cnt_1를 1씩 증가시킨다.
+            if self.cnt_1 % 5 == 0: # cnt를 5로 나눈 나머지가 0일때, 즉 5의 배수마다
+                self.balance += amount # 입금 금액과 잔액을 더하고
+                self.balance = self.balance * 1.02 # 더한 잔액에 1.02를 곱하여 이자를 계산한다
+            else:
+                self.balance += amount # 잔액에 입금 금액을 추가하고
+            self.history[self.cnt_2] = '입금: {}원 / 잔액: {}'.format(amount, self.balance) # self.history에 입금 내역을 기록한다.
+            print('입금이 완료되었습니다.') # 입금 완료 메시지와
+            print('입금 후 잔액: {}'.format(self.balance)) # 잔액을 출력한다.
+
+    def withdraw(self, amount): # 출금 메서드를 생성한다.
+        if amount > self.balance: # 출금 금액이 잔액보다 많으면
+            print('금액이 부족합니다. 다시 입력해 주세요.') # 오류 메시지를 출력한다.
+        else: # 그게 아니라면
+            self.cnt_2 += 1
+            self.balance -= amount # 잔액에서 출금 금액을 빼고
+            self.history[self.cnt_2] = '출금: {}원 / 잔액: {}'.format(amount, self.balance) # self.history에 입금 내역을 기록한다.
+            print('{}원이 출금되었습니다.'.format(amount)) # 출금 금액과
+            print('출금 후 잔액: {}'.format(self.balance)) # 잔액을 출력한다.
+    
+    def History(self): # 거래내역을 출력하는 메서드를 생성한다.
+        for x, y in self.history.items(): # 딕셔너리에 있는 items를 하나씩 가져오며
+            print('{}번째 거래 : {}'.format(x, y)) # 포멧에 맞게 출력한다.
+
+value = input('이름을 입력하세요: ') # value라는 변수에 계좌 개설자의 이름을 입력한다.
+value = Account(value) # 입력한 이름을 Account 클래스의 인수로 주면서 Account클래스에 value 객체를 할당한다.
+value.info() # value객체에 대하여 계좌정보를 출력한다.
+
+while True: # 출금과 입금을 계속하기 위해 반복하는데
+    num = int(input('메뉴를 선택해 주세요\n1. 입금 / 2. 출금 / 3. 계좌 정보 출력 / 5. 거래 내역 출력 / 6. 종료\n')) # 메뉴를 입력한다.
+    if num == 1: # 만약 입금을 선택했다면
+        price = int(input('입금할 금액을 입력해 주세요.\n')) # 입금할 금액을 입력하고
+        value.deposit(price) # value에 대하여 deposit메서드에 price를 전달한다.
+    elif num == 2: # 출금을 선택했다면
+        price = int(input('출금할 금액을 입력해 주세요\n')) # 출금할 금액을 입력하고
+        value.withdraw(price) # value에 대하여 withdraw메서드에 price를 전달한다.
+    elif num == 3: # 계좌 정보 출력을 선택했다면
+        value.info() # value에 대하여 info 메서드를 호출한다.
+    elif num == 5: # 거래 내역 출력을 선택했다면
+        value.History() # value에 대하여 History 메서드를 호출한다.
+    elif num == 6: # 종료를 선택했다면
+        print('거래를 종료합니다.') # 종료메시지와 함께
+        break # 반복문을 탈출한다
+```
