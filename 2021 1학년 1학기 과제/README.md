@@ -1579,3 +1579,318 @@ while True: # 출금과 입금을 계속하기 위해 반복하는데
         print('거래를 종료합니다.') # 종료메시지와 함께
         break # 반복문을 탈출한다
 ```
+
+## 기말 과제
+#### 문제 1. 사용자가 행과 열의 개수를 입력하면 아래와 같은 형태로 숫자를 출력하는 프로그램을 구현하시오.
+- (입력 예시) 행 : 5, 열 : 5
+- (출력 예시)
+-  1  2  3  4  5 
+- 10  9  8  7  6
+- 11 12 13 14 15
+- 20 19 18 17 16
+- 21 22 23 24 25
+
+```python
+x = int(input('행: ')) # 행을 입력받는다
+y = int(input('열: ')) # 열을 입력받는다
+
+for k in range(1, y+1): # 열의 값 만큼 반복하는데
+    if k % 2 == 1: # 만약 k의 값이 홀수이면
+        for i in range(k*x - x + 1, k*x + 1, 1): # k*x - x + 1 부터 k*x + 1번째 까지 1씩 커지면서 출력하고
+            print(i, end = ' ')
+    elif k % 2 == 0: # 만약 k의 값이 짝수이면
+        for i in range(k*x, k*x - x, -1): # k*x부터 k*x - x번째 까지 1씩 작아지면서 출력한다
+            print(i, end = ' ')
+    print('') # 이건 그냥 줄바꿈용
+```
+
+#### 문제 2. 다음과 같은 조건을 마족하도록 시험 결과를 출력하는 프로그램을 구현하시오.
+- 시험은 총 4과목이며 각 과목당 100점 만점
+- 과목 점수 총합이 240점 이상이면 합격
+- 단, 한 과목이라도 40점 이하의 경우 탈락으로 처리
+- 사용자에게 네 과목의 점수를 입력받고, 합격/탈락 결과 출력
+
+- (실행 예시)
+- A 시험 점수 : 70 (enter)
+- B 시험 점수 : 40 (enter)
+- C 시험 점수 : 80 (enter)
+- D 시험 점수 : 80 (enter)
+- 결과 : 탈락
+
+```python
+achi_list = [] # 성적을 저장할 리스트를 생성한다.
+sum = 0 # 성적의 합을 계산할 변수를 생성한다.
+
+for i in ['A', 'B', 'C', 'D']: # 4번 반복하여
+    a = int(input(f'{i}시험 점수 : ')) # 시험 점수를 입력한다.
+    if a > 100 or a < 0: # 만약 입력한 성적이 100점초과이거나 0점 미만이라면
+        print('0 ~ 100점 기준 입니다. 프로그램을 다시 시작해 주세요.') # 오류 메시지를 출력하며
+        exit() # 프로그램을 종료한다.
+    else: # 근데 그게 아니라면
+        achi_list.append(a) # 성적 리스트에 값을 추가하고
+        sum += a # 성적 총합 변수에 더해준다
+
+for i in range(4): # 4번 반복하여
+    if achi_list[i] <= 40: # 성적 리스트에 있는값이 하나라도 40점 이하라면
+        print('결과 : 탈락') # 탈락 메시지를 입력하고
+        exit() # 프로그램을 종료한다.
+        
+if sum >= 240: # 만약 총합이 240점 이상이라면
+    print('결과 : 합격') # 합격 메시지를 출력하고
+elif sum < 240: # 그게 아니라면
+    print('결과 : 탈락') # 탈락 메시지를 출력한다.
+```
+
+#### 문제 3. 숫자 n을 입력받아 리스트에 저장된 값들의 위치를 n만큼 오른쪽으로 옮겨서 출력하는 프로그램을 구현하시오.
+- *조건 
+- 숫자 n은 input() 함수를 사용하여 입력받음
+- 리스트에 저장된 값들은 난수를 사용하여 입력받음
+- (리스트 크기는 10이며, 난수 범위는 1~50, 중복 수 없도록 할 것)
+- (입력 예시 - 숫자 n은 10을 넘지 않는다고 가정)
+- n : 3
+- (출력 예시)
+- 기존 list : [5, 34, 2, 33, 19, 43, 11, 31, 9, 17]
+- 3만큼 이동 : [31, 9, 17, 5, 34, 2, 33, 19, 43, 11]
+
+```python
+from random import * # 랜덤 모듈의 함수를 사용하기 위해 랜덤 모듈을 추가한다.
+
+num_list = [] # 랜덤 정수가 입력될 리스트를 생성하고
+result_list = [] # n칸 이동한 리스트를 입력한다.
+k = 1 # 밑의 while문을 조건에 맞게 총 10회 반복하기 위해 k변수에 1을 할당한다.
+
+while k <= 10: # k가 10이하일 경우 반복하는데
+    a = randint(1, 50) # a는 1~50사이의 정수이고
+    if a not in num_list: # 만약 랜덤으로 생성된 값이 리스트 안에 없다면
+        num_list.append(a) # 리스트에 그 값을 출력하고
+        result_list.append(0) # 결과 리스트에는 0을 추가하여 리스트의 크기를 맞춰준다.
+        k += 1 # k는 1씩 올려준다.
+
+value = int(input('n : ')) # 랜덤으로 생성된 리스트를 몇 칸 옮길지 입력한다.
+
+for i in range(10): # 10회 반복하여
+    if i < 10 - value: # i가 10 - value 미만이라면
+        result_list[i + value] = num_list[i] # i + value의 위치에 i번째 리스트의 값을 할당하고
+    elif i >= 10 - value: # i가 10 - value 이상이라면
+        result_list[i + value - 10] = num_list[i] # i + value - 10번째 위치에 i번째 리스트의 값을 할당한다.
+
+print(f'기존 list : {num_list}\n{value}만큼 이동: {result_list}') # 기존 랜덤으로 생성된 리스트와 n만큼 이동한 리스트를 출력한다.
+```
+
+#### 문제 4. 사용자가 숫자 하나를 입력한다. 리스트에는 숫자 10개가 저장되어 있다. 리스트에 저장되어 있는 수자 중 두 개의 합이 사용자가 입력한 숫자와 동일한 것이 있는지 찾는 프로그램을 구현하시오.
+
+- 조건
+- 난수를 사용하여 리스트에 숫자 저장(리스트 크기는 10)
+- (난수 범위는 0~100) : 중복된 수 없도록 할 것!
+- 리스트에 숫자 입력 후 정렬(오름차순 정렬)
+- 조건에 맞는 숫자가 있는 경우 index 및 해당 숫자 모두 출력할 것
+- (두 숫자의 합이 같은 것이 여러 개 있는 경우 하나의 조합만 출력)
+- 함수 정의 및 함수 호출로 최종 결과 출력
+
+```python
+def result_sum(list_num): # 숫자 저장된 리스트를 인자로 받음
+```
+
+- 난수를 사용하여 숫자 10개 입력(리스트 저장)
+- result_sum(list_num) 함수 호출하여 결과 출력
+- (입력 예시) 숫자를 하나 입력하시오 : 110
+- (출력 예시)
+- 리스트 숫자(난수) : [17, 19, 20, 29, 33, 70, 73, 84, 85, 91]
+- 결과
+- index : 1 / 숫자 : 19
+- index : 9 / 숫자 : 91
+- 19 + 91 = 110
+
+```python
+from random import * # 랜덤모듈의 함수를 사용하기 위해 랜덤 모듈을 불러온다.
+
+num_list = [] # 랜덤한 수가 들어갈 리스트를 생성한다.
+k = 1 # 아래의while문을 조건에 맞게 10회 반복하기 위해 k 에 1을 할당한다.
+
+def result_sum(n): # n을 매개변수로 하는 함수를 정의하는데
+    for i in range(10): # 10회 반복하여
+        for k in range(10): # 10회 반복하여
+            if i != k and num_list[i] + num_list[k] == num_list[10]: # 만약 사용자가 찾고자 하는 값과 i번째, k번째 수의 합이 같다면
+                return i, num_list[i], k, num_list[k] # i, i번째 값, k, k번째 값을 리턴하고
+    return 'N', 'O', 'N', 'E' # 그게 아니고 모든 반복이 끝났음에도 불구하고 값을 찾지 못하면 'N", "O", "N", "E"를 리턴한다.
+while k <= 10: # k가 10 이하일 떄 반복하여
+    a = randint(0, 100) # a에 0~100사이의 난수를 할당하고
+    if a not in num_list: # 만약 a가 리스트에 있지 않다면
+        num_list.append(a) # 리스트에 a를 추가하고
+        k += 1 # k를 1 증가시킨다.
+
+num_list.sort() # 랜덤함수를 사용하여 값을 추가한 리스트를 오름차순으로 정렬하고
+num_list.append(int(input('숫자 하나를 입력하시오 : '))) # 사용자가 찾는 값을 입력한다.
+
+num_1, A, num_2, B = result_sum(num_list) # 위의 함수를 이용하여 값을 반환받는다.
+
+if num_1 != 'N': # 만약 반환한 값 중 맨 첫 번째 값인 num_1의 값이 'N'이 아니라면
+    print(f'리스트 숫자(난수) : {num_list[0:10]}\n결과\nindex: {num_1} / 숫자: {A}\nindex: {num_2} /  숫자: {B}\n{A} + {B} = {num_list[10]}') # 찾는 수가 몇 번째 값과 몇 번째 값의 합인지 출력하고
+else: # 그게 아니라 반환한 값 중 맨 첫 번쨰 값인 num_1의 값이 'N'이라면 
+    print('찾는 숫자가 없습니다.') # 찾는 숫자가 없음을 출력하고 프로그램을 종료한다.
+```
+
+#### 문제 5. 일일 카페를 운영한다고 가정하자. 아래 조건에 맞도록 프로그램을 구현하시오.
+* 조건
+  - 클래스 및 메소드를 정의하여 프로그램을 구현할 것 (아래 예로 주어진 생성자와 메소드 3개는 필수로 정의하고 필요한 경우 다른 메소드를 정의하여 구현해도 됨)
+  - 메뉴 이름 및 금액은 미리 리스트에 저장할 것
+  - 프로그램이 종료될 때까지 계속 반복할 것
+  - 메뉴 주문은 숫자로 입력받을 것(예시 참고 – 변경 가능)
+    (1 : 커피 / 2 : 스무디 / 3 : 샌드위치 / 4 : 종료)
+  - 결제 진행 시 사용자에게 지불 금액을 입력받고 올바른 거스름돈을 출력할 것
+
+```python
+  class MyCafe:
+     def __init__(self):
+        인스턴스 변수 정의 및 초기화
+        (메뉴 이름 및 금액 설정 – 메뉴는 각 종류 당 5개 이내)
+
+     def cafe_menu(self):  # 메뉴 출력
+        ...
+ 
+     def menu_order(self):   # 메뉴 주문
+        ...
+
+     def menu_pay(self, price):   # 결제
+        ...
+```
+
+-  (출력예시)
+-    ---------------[Cafe Menu]---------------
+-    [커피]
+-    1. 아메리카노(HOT) 2,000
+-    2. 아메리카노(ICE)  2,500
+-    3. 카페라떼         3,000
+-    4. 카라멜 마끼야또  3,500
+-    5. 바닐라라떼       3,500
+-    [스무디]
+-    1. 딸기 스무디      4,000
+-    2. 망고 스무디      4,500
+-    3. 블루베리 스무디  5,000
+-    4. 요거트 스무디    4,500
+-    5. 구슬 스무디      5,500
+-    [샌드위치]
+-    1. 에그샐러드샌드위치   6,000
+-    2. 디럭스 샌드위치      6,000
+-    3. 통밀 햄에그 샌드위치 6,500
+-    4. 미니버거             7,000
+-    5. BLT 샌드위치        5,500
+-    -----------------------------------------   
+
+-    주문할 메뉴 종류를 선택하세요. 
+-    (1 : 커피 / 2 : 스무디 / 3 : 샌드위치 / 4 : 종료)
+-    선택 : 1
+-    어떤 커피를 주문하시겠습니까? 1
+-    주문 내역
+-    아메리카노(HOT)   2,000원
+-    결제 금액 : 2,000원
+-    추가 주문을 원하시면 a / 결제를 원하시면 p를 입력하세요. : a
+-    주문할 메뉴 종류를 선택하세요. 
+-    (1 : 커피 / 2 : 스무디 / 3 : 샌드위치 / 4 : 종료)
+-    선택 : 3
+-    어떤 샌드위치를 주문하시겠습니까? 3
+-    주문 내역
+-    아메리카노(HOT)   2,000원
+-    통밀 햄에그 샌드위치   6,500원
+-    결제 금액 : 8,500
+-    추가 주문을 원하시면 a / 결제를 원하시면 p를 입력하세요. : p
+-    결제 금액은 총 8,500원입니다.
+-    지불 금액 : 10,000원
+-    거스름 돈 : 1,500원
+
+-    주문할 메뉴 종류를 선택하세요. 
+-    (1 : 커피 / 2 : 스무디 / 3 : 샌드위치 / 4 : 종료)
+-    선택 : 4
+-    프로그램을 종료합니다.
+
+```python
+class MyCafe: # MyCafe클래스를 생성한다.
+
+    def __init__(self): # 기본적인 변수설정을 하는데
+        self.coffee_name = ['아메리카노(HOT)', '아메리카노[ICE]', '카페라떼', '카라멜 마끼야또', '바닐라라떼'] # 커피 5종
+        self.coffee_price = [2000, 2500, 3000, 3500, 3500] # 커피 5종의 가격
+        self.smoothie_name = ['딸기 스무디', '망고 스무디', '블루베리 스무디', '요거트 스무디', '구슬 스무디'] # 스무디 5종
+        self.smoothie_price = [4000, 4500, 5000, 4500, 5500] # 스무디 5종의 가격
+        self.sandwitch_name = ['에그샐러드샌드위치', '디럭스 샌드위치', '통밀 햄에그 샌드위치', '미니버거', 'BLT 샌드위치'] # 샌드위치 5종
+        self.sandwitch_price = [6000, 6000, 6500, 7000, 5500] # 샌드위치 5종의 가격
+        self.coffee_order = 0 # 주문한 커피의 번호
+        self.smoothie_order = 0 # 주문한 스무디의 번호
+        self.sandwitch_order = 0 # 주문한 샌드위치의 번호
+        self.pay_price = 0 # 내야할 금액
+        self.paying = 0 # 낸 금액
+        self.num = 0 # 커피, 스무디, 샌드위치중 하나를 고를 때 사용할 변수
+        self.intention = 'a' # 사용자의 의사
+        self.ap = ['a', 'p'] # 예외처리에 필요한 리스트
+    
+    def cafe_menu(self): # 메뉴 출력 메소드
+        print('[커피]') # 커피
+        for i in range(5): # 커피의 종류와 가격을 순서대로 출력
+            print(f'{i+1}. {self.coffee_name[i]} {self.coffee_price[i]}')
+        print('[스무디]') # 스무디
+        for i in range(5): # 스무디의 종류와 가격을 순서대로 출력
+            print(f'{i+1}. {self.smoothie_name[i]} {self.smoothie_price[i]}')
+        print('[샌드위치]') # 샌드위치
+        for i in range(5): # 샌드위치의 종류와 가격을 순서대로 출력
+            print(f'{i+1}. {self.sandwitch_name[i]} {self.sandwitch_price[i]}')
+
+    def menu_order(self): # 메뉴 주문 메소드
+        while self.num != 4: # 손님이 주문 종료를 선택할 때 까지 반복한다.
+            print('주문할 메뉴 종류를 선택하세요.\n(1. 커피 / 2. 스무디 / 3. 샌드위치 / 4. 종료)') # 메뉴의 종류를 선택
+            self.num = int(input('선택: ')) # 선택한 값을 self.num에 입력
+            if self.num == 1: # 만약 커피를 선택했다면
+                self.coffee_order = int(input('어떤 커피를 주문하시겠습니까? ')) # 주문할 커피의 종류를 입력
+                if self.coffee_order > len(self.coffee_name): # 만약 커피의 종류 리스트에 없는 값을 입력한다면
+                    print('그런 선택지는 없습니다 손님. 다시 선택해 주세요.') # 오류 메시지 출력 후
+                    continue # 건너뛰기
+                else: # 아니면
+                    self.pay_price += self.coffee_price[self.coffee_order - 1] # 결제 해야할 금액에 주문한 커피의 값을 추가 하고
+                    print(f'주문 내역\n{self.coffee_name[self.coffee_order - 1]} {self.coffee_price[self.coffee_order - 1]}원\n결제금액 : {self.pay_price}') # 주문내역 출력
+            elif self.num == 2: # 위의 커피와 같은 방법
+                self.smoothie_order = int(input('어떤 스무디를 주문하시겠습니까? '))
+                if self.smoothie_order > len(self.smoothie_name):
+                    print('그런 선택지는 없습니다 손님. 다시 선택해 주세요.')
+                    continue
+                else:
+                    self.pay_price += self.smoothie_price[self.smoothie_order - 1]
+                    print(f'주문 내역\n{self.smoothie_name[self.smoothie_order - 1]} {self.smoothie_price[self.smoothie_order - 1]}원\n결제금액 : {self.pay_price}')
+            elif self.num == 3: # 위의 커피와 같은 방법
+                self.sandwitch_order = int(input('어떤 샌드위치를 주문하시겠습니까? '))
+                if self.sandwitch_order > len(self.sandwitch_name):
+                    print('그런 선택지는 없습니다 손님. 다시 선택해 주세요.')
+                    continue
+                else:
+                    self.pay_price += self.sandwitch_price[self.sandwitch_order - 1]
+                    print(f'주문 내역\n{self.sandwitch_name[self.sandwitch_order - 1]} {self.sandwitch_price[self.sandwitch_order - 1]}원\n결제금액 : {self.pay_price}')
+            elif self.num == 4: # 만약 손님이 주문 종료를 선택했다면
+                print('프로그램을 종료합니다.') # 프로그램 종료 메시지를 출력한 뒤 
+                break # 반복문 탈출
+            else:
+                print('그런 선택지는 없습니다 손님. 다시 선택해 주세요.') # 1, 2, 3, 4번 외의 선택을 했다면 오류메시지 출력 후
+                continue # 건너뛰기
+
+            self.intention = input('추가 주문을 원하시면 a / 결제를 원하시면 p를 입력하세요.: ') # 손님이 결제할지 더 주문할지 선택한다.
+
+
+            if self.intention == 'p': # 결제를 선택하면
+                self.menu_pay(self.pay_price) # 결제 메소드를 실행하고
+            elif self.intention not in self.ap: # 그게 아니라 다른 선택지를 선택한다면
+                print('그런 선택지는 없습니다 손님. 다시 선택해 주세요.') # 오류메시지를 출력하고 
+                continue # 건너뛰기
+
+    def menu_pay(self, price): # 결제 메소드
+        print(f'결제 금액은 총 {price}입니다.') # 결제해야할 금액을 출력하고
+        self.paying = int(input('지불 금액: ')) # 손님이 지불할 금액을 입력받는다.
+        if self.paying >= price: # 만약 입력받은 금액이 결제해야할 금액보다 크거나 같다면
+            print(f'거스름 돈: {self.paying - price}') # 거스름돈을 계산하고
+            self.intention = 'a' # 손님의 의사를 주문으로 변경한 뒤
+            self.menu_order() # 주문 메소드를 실행한다.
+        elif self.paying < price: # 만약 입력받은 금액이 결제해야할 금액보다 작다면
+            print(f'지불할 금액이 {price - self.paying}원 부족합니다. 다시 입력해 주세요.') # 부족한 금액을 출력하고
+            self.menu_pay(price) # 다시 결제 메소드를 실행한다.
+        
+name = input('손님의 닉네임을 입력해 주세요: ') # 손님의 이름을 입력하고
+name = MyCafe() # 클래스를 할당한 뒤
+
+name.cafe_menu() # 그 손님에 대해 메뉴를 출력하고
+name.menu_order() # 메뉴 주문 메소드를 실행한다.
+```
