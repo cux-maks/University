@@ -1,3 +1,104 @@
+## Version 1.3
+```python
+import pandas as p
+import random as r
+import fractions as f
+import tkinter as t
+
+window = t.Tk()
+window.title("계산력 강화")
+window.geometry("640x400+100+100")
+window.resizable(False, False)
+
+num1_list = []
+num2_list = []
+question_list = []
+ans_list = []
+
+sign = ''
+i = 1
+k, n1, n2 = 0, 0, 0
+
+# num = int(input('1. 덧셈\n2. 뺄셈\n3. 나눗셈\n4. 곱셈\n\n'))
+
+label_k = t.Label(window, text = '만들 문제 수')
+label_k.pack()
+k_Entry = t.Entry(window)
+k_Entry.pack()
+
+label_n1 = t.Label(window, text = '최소 자리 수')
+label_n1.pack()
+n1_Entry = t.Entry(window)
+n1_Entry.pack()
+
+label_n2 = t.Label(window, text = '최대 자리 수')
+label_n2.pack()
+n2_Entry = t.Entry(window)
+n2_Entry.pack()
+
+def get_nums():
+    k = k_Entry.get()
+    n1 = n1_Entry.get()
+    n2 = n2_Entry.get()
+    print(k, n1, n2)
+
+make_btn = t.Button(window, text = '만들기', command = get_nums)
+make_btn.pack()
+
+window.mainloop()
+
+# def making_Q():
+#     if num == 1:
+#         sign = '+'
+#     elif num == 2:
+#         sign = '-'
+#     elif num == 3:
+#         sign = '÷'
+#     elif num == '4':
+#         sign = 'x'
+
+#     while i < k+1:
+#         a = r.randint(10**(n1-1), 10**n2-1)
+#         b = r.randint(10**(n1-1), 10**n2-1)
+#         if a not in num1_list and b not in num2_list:
+#             if num == 1:
+#                 num1_list.append(a)
+#                 num2_list.append(b)
+#                 ans_list.append(a+b)
+#                 question_list.append(str(a)+' '+'+'+' '+str(b)+' '+'=')
+#                 i += 1
+#             elif num == 2:
+#                 num1_list.append(a)
+#                 num2_list.append(b)
+#                 ans_list.append(a-b)
+#                 question_list.append(str(a)+' '+'-'+' '+str(b)+' '+'=')
+#                 i += 1
+#             elif num == 3:
+#                 num1_list.append(a)
+#                 num2_list.append(b)
+#                 question_list.append(str(a)+' '+'÷'+' '+str(b)+' '+'=')
+#                 if type(a/b) != int:
+#                     ans_list.append(f.Fraction(a, b))
+#                 else:
+#                     ans_list.append(a/b)
+#                 i += 1
+#             elif num == 4:
+#                 num1_list.append(a)
+#                 num2_list.append(b)
+#                 ans_list.append(a*b)
+#                 question_list.append(str(a)+' '+'x'+' '+str(b)+' '+'=')
+#                 i += 1
+
+#     question = {'문제' : question_list}
+#     ans = {'답' : ans_list}
+
+#     question = p.DataFrame(question)
+#     ans = p.DataFrame(ans)
+
+#     question.to_excel(excel_writer='C:\\Users\\Blue\\Desktop\\계산력\\문제지.xlsx')
+#     ans.to_excel(excel_writer='C:\\Users\\Blue\\Desktop\\계산력\\문제_답지.xlsx')
+```
+
 ## Version 1.0
 
 ```python
