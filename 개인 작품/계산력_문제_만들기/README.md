@@ -1,3 +1,108 @@
+## Version Alpha
+```python
+from tkinter.constants import BOTTOM, DISABLED, LEFT, RIGHT, TOP
+import pandas as p
+import random as ra
+import fractions as f
+import tkinter as t
+
+window = t.Tk()
+window.title("계산력 강화")
+window.geometry("640x400+100+100")
+window.resizable(False, False)
+
+num1_list = []
+num2_list = []
+question_list = []
+ans_list = []
+
+num, k, n1, n2 = 0, 0, 0, 0
+r = t.IntVar()
+
+One_radio = t.Radiobutton(window, text = '덧셈', variable = r, value = 1)
+One_radio.pack(side = LEFT, padx = 15)
+Two_radio = t.Radiobutton(window, text = '뺄셈', variable = r, value = 2)
+Two_radio.pack(side = LEFT, padx = 15)
+Three_radio = t.Radiobutton(window, text = '나눗셈', variable = r, value = 3)
+Three_radio.pack(side = LEFT, padx = 15)
+Four_radio = t.Radiobutton(window, text = '곱셈', variable = r, value = 4)
+Four_radio.pack(side = LEFT, padx = 15)
+
+label_name = t.Label(window, text = '학생 이름')
+label_name.pack(side = TOP, pady = 10)
+name_Entry = t.Entry(window)
+name_Entry.pack(side = TOP, pady = 10)
+
+label_k = t.Label(window, text = '만들 문제 수')
+label_k.pack(side = TOP, pady = 10)
+k_Entry = t.Entry(window)
+k_Entry.pack(side = TOP, pady = 10)
+
+label_n1 = t.Label(window, text = '최소 자리 수')
+label_n1.pack(side = TOP, pady = 10)
+n1_Entry = t.Entry(window)
+n1_Entry.pack(side = TOP, pady = 10)
+
+label_n2 = t.Label(window, text = '최대 자리 수')
+label_n2.pack(side = TOP, pady = 10)
+n2_Entry = t.Entry(window)
+n2_Entry.pack(side = TOP, pady = 10)
+
+def get_nums():
+    num = r.get()
+    k = int(str(k_Entry.get()))
+    n1 = int(str(n1_Entry.get()))
+    n2 = int(str(n2_Entry.get()))
+    i = 1
+
+    while i < k+1:
+        a = ra.randint(10**(n1-1), 10**n2-1)
+        b = ra.randint(10**(n1-1), 10**n2-1)
+        if a not in num1_list and b not in num2_list:
+            if num == 1:
+                num1_list.append(a)
+                num2_list.append(b)
+                ans_list.append(a+b)
+                question_list.append(str(a)+' '+'+'+' '+str(b)+' '+'=')
+                i += 1
+            elif num == 2:
+                num1_list.append(a)
+                num2_list.append(b)
+                ans_list.append(a-b)
+                question_list.append(str(a)+' '+'-'+' '+str(b)+' '+'=')
+                i += 1
+            elif num == 3:
+                num1_list.append(a)
+                num2_list.append(b)
+                question_list.append(str(a)+' '+'÷'+' '+str(b)+' '+'=')
+                if type(a/b) != int:
+                    ans_list.append(f.Fraction(a, b))
+                else:
+                    ans_list.append(a/b)
+                i += 1
+            elif num == 4:
+                num1_list.append(a)
+                num2_list.append(b)
+                ans_list.append(a*b)
+                question_list.append(str(a)+' '+'x'+' '+str(b)+' '+'=')
+                i += 1
+
+    question = {'문제' : question_list}
+    ans = {'답' : ans_list}
+
+    question = p.DataFrame(question)
+    ans = p.DataFrame(ans)
+
+    question.to_excel(excel_writer=f'[파일 경로]\\계산력문제지_{str(name_Entry.get())}.xlsx')
+    ans.to_excel(excel_writer=f'[파일 경로]\\계산력문제_답지_{str(name_Entry.get())}.xlsx')
+
+make_btn = t.Button(window, text = '만들기', command = get_nums)
+make_btn.place(x = 300, y = 350)
+
+window.mainloop()
+
+```
+
 ## Version 1.3
 ```python
 import pandas as p
