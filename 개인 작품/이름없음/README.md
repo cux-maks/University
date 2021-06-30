@@ -49,6 +49,7 @@ result.stdout.on(‘data’, function(data) { console.log(data.toString()); });
 result stderr.on(‘data’, function(data) { console.log(data.toString()); });
 ```
 - -> toString()이 없다면 Buffer 형태로 출력됨.
+- ex) <Buffer 49 20 61 6d 20 70 79 74 68 6f 6e 0a>
 
 
 #### <파이썬 함수 실행>
