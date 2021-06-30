@@ -17,13 +17,9 @@ const spawn = require(‘child_process’).spawn;
 
 const result = spawn(‘python’, [‘파이썬파일.py’], 매개변수1, 매개변수2, ...);
 
-result.stdout.on(‘data’, function(data){
-	console.log(data.toString());
-});
+result.stdout.on(‘data’, function(data){ console.log(data.toString()); });
 
-result.stderr.on(‘data’, function(data){
-	consoe.log(data.toString());
-)};
+result.stderr.on(‘data’, function(data){ consoe.log(data.toString()); )};
 ```
 
 ```js
@@ -50,13 +46,9 @@ const spawn = require(‘child_process;).spawn;
 
 const result = spawn(‘python’, [‘print.py’]);
 
-result.stdout.on(‘data’, function(data) {
-	console.log(data.toString());
-});
+result.stdout.on(‘data’, function(data) { console.log(data.toString()); });
 
-result stderr.on(‘data’, function(data) {
-	console.log(data.toString());
-});
+result stderr.on(‘data’, function(data) { console.log(data.toString()); });
 ```
 - -> toString()이 없다면 Buffer 형태로 출력됨.
 
