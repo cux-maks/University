@@ -9,11 +9,13 @@
 
 
 #### <기본 사용법>
+
 ```js
 // 1. child_process모듈의 spawn 취득
 // 2. spawn 을 통해 “python 파이썬파일.py”명령어 실행
 // 3. stdout의 ‘data’이벤트리스너로 실행결과를 받는다.
 // 4. 에러 발생 시 stderr의 ‘data’이벤트리스너로 실행 결과를 받는다.
+
 const spawn = require(‘child_process’).spawn;
 
 const result = spawn(‘python’, [‘파이썬파일.py’], 매개변수1, 매개변수2, ...);
