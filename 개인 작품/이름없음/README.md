@@ -4,6 +4,7 @@
 ### 2. 파이썬 파일 실행
 ### 3. 파이썬 함수 실행
 ### 4. 파이썬 함수에 인수 전달
+### 5. 
 
 
 
@@ -28,13 +29,6 @@ const result = spawn(‘python’, [‘파이썬파일명.py’, 매개변수1, 
 - -> 이 코드는 파이썬 코드를 실행하는 것과 동일하게 동한다.
 
 
-
-
-
-
-
-
-
 #### <파이썬 파일 실행>
 
 ```python
@@ -51,6 +45,7 @@ result.stdout.on(‘data’, function(data) { console.log(data.toString()); });
 result stderr.on(‘data’, function(data) { console.log(data.toString()); });
 ```
 - -> toString()이 없다면 Buffer 형태로 출력됨.
+
 
 #### <파이썬 함수 실행>
 
@@ -69,3 +64,37 @@ const result_01 = spawn('python', ['function_print.py'], );
 
 result_01.stdout.on('data', (result)=>{ console.log(result.toString()); });
 ```
+
+#### <파이썬 함수에 인수 전달>
+
+```python
+# function_args.py 파일
+import sys
+def getName(name, age):
+	print (name + " : " + age)
+if __name__ == '__main__':
+	getName(sys.argv[1], sys.argv[2])
+```
+
+```js
+const result_02 = spawn('python', ['function_args.py', 'xmaaks', '20']);
+
+result_02.stdout.on('data', (result)=>{ console.log(result.toString()); });
+// 출력 결과 => "xmaaks : 20"
+```
+
+
+#### <참고>
+child_process 모듈에서는 spawn 뿐만 아니라, exec를 통해 외부 명령어를 실행할 수 있다.
+
+1. spawn: 별도 프로세스를 띄워서 명령어를 실행
+2. exce: 셸을 띄워서 명령어 실행
+
+```js
+const exec = require('child_process').exec;
+
+const result = exec('ls');
+
+result.stdout.on('data', function(is_result){ console.log(ls_result.toString()); });
+```
+- -> Unix/Linux 환경에서는 ls, Windows 환경에서는 dir을 사용한다.
