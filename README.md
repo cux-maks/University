@@ -1,7 +1,7 @@
 # CUX-MAKS's LABORATORY 🖥
 
 ###### KOREATECH COMPUTER SCIENCE & ENGINEERING JO BYEONGHA
-
+###### [톡명함]([http://www.google.co.kr](https://namecard.kakao.com/jomu))
 
 
 ### 2021년 1학기 시간표 🕰
