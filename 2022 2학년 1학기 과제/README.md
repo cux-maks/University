@@ -774,7 +774,7 @@ int main(void)
 ###### ShowData 함수: 객체의 모든 정보를 화면에 출력해 주는 함수
 ###### double Distance(Point &p1) 함수: 자기 자신의 Point 객체와 전달된 Point 객체 사이의 거리를 리턴 하는 함수. 두 점간의 거리(d)는 다음과 같다.
 
-
+![](./img1.png)
 
 ###### GetArea 함수: 0를 리턴한다. 
 ###### GetVolume 함수: 0을 리턴한다. 
