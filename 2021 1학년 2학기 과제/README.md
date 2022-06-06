@@ -1200,10 +1200,476 @@ int main(int argc, char* argv[]) { // 인수를 입력받는 상태의 main함�
 #### 문제1. 텍스트 파일을 읽어서 문자수, 단어수, 라인(line)수를 계산하여 출력하는 프로그램을 작성하시오.
 
 ```c
+#define _CRT_SECURE_NO_WARNINGS // fopen의 보안 오류를 무시하기 위해 define
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
 
+int main() {
+
+	FILE *fp; // 파일 포인터 선언
+	int c; // 불러온 문자 출력하기 위해 선언
+	int num_c = 0; // 문자의 수 체크
+	int num_s = 1; // 단어의 수 체크
+	int num_l = 1; // 줄 수 체크
+
+	fp = fopen("sample.txt", "r"); // sample.txt를 읽기모드로 연다
+
+	if (fp == NULL) { // 만약 파일이 없으면
+		printf("파일 열기 실패\n"); // 파일 열기 실패라는 안내문구 출력
+	}
+	else { // 있으면
+		printf("파일 열기 성공\n"); // 파일 열기 성공이르난 안내문구 출력
+	}
+
+	while ((c = fgetc(fp)) != EOF) { // EOF == -1, 파일끝까지 읽음
+		putchar(c); // 파일 내용을 하나하나 출력
+		num_c += 1; // 불러온 파일의 글자 하나하나마다 글자수 1씩 증가
+		if (c == '\n') { // 만약 불러온 글자가 줄바꿈 글자라면
+			num_c -= 1; // 글자 1감소
+			num_s += 1; // 단어 1증가
+			num_l += 1; // 줄 수 1증가
+		}
+		if (c == ' ') { // 만약 물러온 글자가 공백 글자라면
+			num_c -= 1; // 글자 1감소
+			num_s += 1; // 단어 1증가
+		}
+	}
+
+	printf("\n문자 수: %d\n단어 수: %d\n라인 수: %d\n", num_c, num_s, num_l); // 글자수, 단어수, 라인수를 차례대로 출력
+
+	fclose(fp); // 파일 닫고
+
+	return 0; // 프로그램 종료
+
+}
 ```
 
 #### 문제2. 다음과 같이 학생들의 교과목성적이 저장되어 있는 텍스트파일을 읽어서 성적의 평균을 구하여 파일에 쓰는 프로그램을 작성하시오. 평균은 소수점 2자리까지 출력(샘플 텍스트파일 : student_score.txt)
+![](./img1.png)
+
+```c
+#define _CRT_SECURE_NO_WARNINGS // 보안오류 무시하기 위해 deifne
+
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
+
+#define SIZE 20 // 배열의 크기를 지정하기 위해 define
+
+int main(void)
+{
+    FILE* fp1 = NULL; // 파일 포인터 선언
+    FILE* fp2 = NULL; // 파일 포인터 선언
+
+    char name[SIZE]; // 이름 배열 선언
+    double korean, math, english; // 과목별 점수 선언
+
+    korean = 0.0; math = 0.0; english = 0.0; // 과목별 점수 0으로 초기화
+
+    if ((fp1 = fopen("sample.txt", "r")) == NULL) // 파일을 열고 파일이 없으면 오류 문구출력
+    {
+        printf("파일이 존재하지 않습니다.\n");
+        exit(1);
+    }
+    if ((fp2 = fopen("average.txt", "a")) == NULL) // 파일을 열고 파일이 없으면 오류 문구 출력
+    {
+        printf("파일이 존재하지 않습니다.\n");
+        exit(1);
+    }
+
+    fscanf(fp1, "%*s\t%*s\t%*s\t%*s", name, &korean, &math, &english); // 이름과 점수 스캔
+
+    fprintf(fp2, "이름    평균\n"); // 이름과 평균 출력
+
+    while (!feof(fp1)) // 파일이 끝날 때 까지
+    {
+        fscanf(fp1, "%s\t%lf\t%lf\t%lf", name, &korean, &math, &english); // 이름과 점수 스캔
+        fprintf(fp2, "%s\t%.2lf\n", name, (korean + math + english) / 3);// 스캔한 이름에 평균점수 출력
+    }
+    return 0; // 프로그램 종료
+}
+```
+
+#### 문제3. 실습 예제 "주소록 만들기"의 도전문제를 구현하시오.
+
+```c
+// 미해결
+```
+
+## 과제12
+#### 문제1. 3개의 실수 중에서 최소값을 구하는 함수 매크로 MIN3(x, y, z)를 정의하고 이것을 이용하여 사용자로부터 받은 3개의 실수 중에서 최소값을 계산해서 출력하는 프로그램을 작성하시오.
+
+```c
+#define _CRT_SECURE_NO_WARNINGS // scanf의 보안오류를 무시하기 위해 define
+#define MIN3(x, y, z) (((x) < (y) ? (x) : (y)) < ((y) < (z) ? (y) : (z)) ? ((x) < (y) ? (x) : (y)) : ((y) < (z) ? (y) : (z))) // 입력한 세 실수의 최소값을 찾는 함수 매크로 정의
+
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
+
+int main() {
+
+	float a, b, c; // 입력한 세 실수를 저장하기 위해 a, b, c 실수형 변수 선언
+	printf("세 실수를 사이에 공백을 두고 입력하시오.\n"); // 세 실수를 사이에 공백을 두고 입력하라는 안내문구 출력
+	scanf("%f %f %f", &a, &b, &c); // 세 실수를 사이에 공백을 두고 입력하여 각각 a, b, c에 저장
+	printf("최소값: %f\n", MIN3(a, b, c)); // a, b, c를 MIN3 함수 매크로에 전달하여 최소값을 출력
+
+	return 0; // 프로그램 종료
+}
+```
+
+#### 문제2. 실습예제 "연결리스트를 이용한 책목록 관리프로그램”을 아래 기능을 함수로 구현하여 보완하시오. (13주차 과제 “주소록 만들기” 참조. 책목록을 파일에 저장하지 않아도 됨)
+#### 기능: 검색, 추가, 삭제, 수정, 출력(전체 목록)
+#### 메뉴에서 기능 선택
+#### 종료시 책목록 연결리스트 메모리 해제
+
+```c
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <Windows.h>
+
+#define S_SIZE 50
+
+typedef struct NODE {
+
+    char title[S_SIZE];
+    int year;
+    struct NODE* link;
+
+} NODE;
+
+NODE* list = NULL;
+NODE* prev = NULL, * p = NULL, * next = NULL;
+
+char buffer[S_SIZE];
+int year;
+int mode = 1;
+int book_c = 0;
+
+void main_mode();
+void find_mode();
+void add_mode();
+void remove_mode();
+void modify_mode();
+void print_mode();
+
+int main(void)
+{
+
+    printf("------ 다산정보관 ------\n\n");
+    Sleep(1000);
+
+    while (mode != 7) {
+
+        if (mode == 1) {
+            main_mode();
+        }
+        else if (mode == 2) {
+            find_mode();
+        }
+        else if (mode == 3) {
+            add_mode();
+        }
+        else if (mode == 4) {
+            remove_mode();
+        }
+        else if (mode == 5) {
+            modify_mode();
+        }
+        else if (mode == 6) {
+            print_mode();
+        }
+
+    }
+
+    p = list;
+
+    while (p != NULL)
+    {
+        next = p->link;
+        free(p);
+        p = next;
+    }
+
+    return 0;
+
+}
+
+void main_mode() {
+
+    int num = 0;
+    printf("--------- MENU ---------\n");
+    printf("1. 찾기\n");
+    printf("2. 추가\n");
+    printf("3. 제거\n");
+    printf("4. 수정\n");
+    printf("5. 출력 리스트\n");
+    printf("6. 나가기\n>> ");
+
+    scanf_s("%d", &num);
+    mode = 1 + num;
+}
+
+void find_mode() {
+
+    printf("\n\n<찾기>\n");
+
+    int i = 0;
+    int p_c = 0;
+
+    getchar();
+
+    if (!book_c) {
+
+        printf("책이 없습니다.\n");
+        system("pause");
+        mode = 1;
+        return;
+
+    }
+
+    while (1) {
+
+        printf("책의 제목을 입력하시오.(취소하려면 엔터)\n>> ");
+        gets_s(buffer, S_SIZE);
+
+        if (buffer[0] == '\0') {
+
+            mode = 1;
+            return;
+
+        }
+
+        p = list;
+
+        while (1) {
+
+            if (strcmp(buffer, p->title) == 0) break;
+            else if (p_c == book_c) {
+
+                printf("해당 제목의 책이 존재하지 않습니다.\n");
+                system("pause");
+                mode = 1;
+                return;
+
+            }
+
+            p = p->link;
+            p_c++;
+
+        }
+
+        printf("책 %s는 리스트에 %d번째에 있습니다.\n", buffer, p_c + 1);
+        system("pause");
+        mode = 1;
+        break;
+
+    }
+}
+
+void add_mode() {
+
+    printf("\n\n<추가>\n");
+
+    getchar();
+
+    while (1) {
+
+        printf("책의 제목을 입력하시오.(취소하려면 엔터)\n>> ");
+        gets_s(buffer, S_SIZE);
+
+        if (buffer[0] == '\0') {
+
+            mode = 1;
+            break;
+
+        }
+
+        p = (NODE*)malloc(sizeof(NODE));
+
+        strcpy(p->title, buffer);
+        printf("책의 출판 연도를 입력하시오.\n>>");
+        gets_s(buffer, S_SIZE);
+        year = atoi(buffer);
+        p->year = year;
+
+        if (list == NULL) {
+            list = p;
+        }
+        else {
+            prev->link = p;
+        }
+        p->link = NULL;
+        prev = p;
+        book_c++;
+    }
+
+    printf("\n");
+
+}
+
+void remove_mode() {
+
+    printf("\n\n<제거>\n");
+
+    int i = 0;
+    int p_c = 0;
+
+    getchar();
+
+    if (!book_c) {
+
+        printf("책이 없습니다.\n");
+        system("pause");
+        mode = 1;
+        return;
+
+    }
+    while (1) {
+
+        printf("삭제할 책의 제목을 입력하시오.(취소하려면 엔터)\n>> ");
+        gets_s(buffer, S_SIZE);
+
+        if (buffer[0] == '\0') {
+
+            mode = 1;
+            return;
+
+        }
+
+        p = list;
+
+        while (1) {
+
+            if (strcmp(buffer, p->title) == 0) break;
+            else if (p_c == book_c) {
+
+                printf("해당 제목의 책이 존재하지 않습니다.\n");
+                system("pause");
+                mode = 1;
+                return;
+
+            }
+
+            p = p->link;
+            p_c++;
+
+        }
+
+        NODE* next = NULL;
+        NODE* pick = NULL;
+        pick = p;
+        next = p->link;
+
+        p = list;
+
+        for (i = 0; i < (p_c - 1); i++) {
+
+            p = p->link;
+
+        }
+
+        p->link = next;
+
+        printf("책 %s를 삭제하였습니다.\n", buffer);
+        system("pause");
+        book_c--;
+        mode = 1;
+        break;
+
+    }
+}
+void modify_mode() {
+
+    printf("\n\n<수정>\n");
+
+    int i = 0;
+    int p_c = 0;
+    int modify_year = 0;
+
+    getchar();
+
+    if (!book_c) {
+
+        printf("책이 없습니다.\n");
+        system("pause");
+        mode = 1;
+        return;
+
+    }
+    while (1) {
+
+        printf("수정할 책의 제목을 입력하시오.(취소하려면 엔터)\n>> ");
+        gets_s(buffer, S_SIZE);
+
+        if (buffer[0] == '\0') {
+
+            mode = 1;
+            return;
+
+        }
+
+        p = list;
+
+        while (1) {
+
+            if (strcmp(buffer, p->title) == 0) break;
+            else if (p_c == book_c) {
+
+                printf("해당 제목의 책이 존재하지 않습니다.\n");
+                system("pause");
+                mode = 1;
+                return;
+
+            }
+
+            p = p->link;
+            p_c++;
+
+        }
+
+        printf("책%s를(을) 찾았습니다. 수정할 제목을 입력하시오.\n>> ", buffer);
+        memset(buffer, 0, S_SIZE);
+        gets_s(buffer, S_SIZE);
+        printf("수정할 출판 년도를 입력하시오.\n>> ");
+        scanf_s("%d", &modify_year);
+
+        strcpy(p->title, buffer);
+        p->year = modify_year;
+
+        printf("수정되었습니다.\n");
+        system("pause");
+        mode = 1;
+        break;
+
+    }
+
+}
+
+void print_mode() {
+
+    int a = 1;
+
+    printf("\n\n책 리스트\n");
+
+    p = list;
+    
+    while (p != NULL)
+    {
+        printf("%d. %s(%d)\n", a, p->title, p->year);
+        p = p->link;
+        a++;
+    }
+
+    a = 1;
+    system("pause");
+    mode = 1;
+}
+```
+
+
+
+
+
+
 
 
 
