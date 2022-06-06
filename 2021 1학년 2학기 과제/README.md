@@ -821,12 +821,389 @@ void reverse(int* a[]) { // 맨 뒤와 맨 앞의 원소를 바꾸면서 순서�
 }
 ```
 
+## 과제9
+#### 문제1. 다음과 같이 연산의 이름을 문자열로 받아서 해당 연산을 실행하는 프로그램을 작성하시오. (연산 이름 : add, sub, mul, div)
+#### 실행 예:
+#### 연산을 입력하시오: add 3.2 5.1
+#### 연산의 결과: 8.3
 
+```c
+#define _CRT_SECURE_NO_WARNINGS // scanf의 오류를 무시하기 위해 define
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
 
+int main() {
 
+	char sign[4] = ""; // 연산 기호를 저장하기 위한 문자열 변수 sign 선언
+	float num_1, num_2; // 연산 숫자를 저장하기 위한 실수형 변수 num_1, num_2 선언
 
+	printf("add, sub, mul, div 중 한가지를 사용하여 식을 입력하시오.\nex) add 3.2 5.1\n>>");  // 수식 입력 안내 문구 출력
+	scanf("%s %f %f", &sign, &num_1, &num_2); // 입력한 수식을 sign, num_1, num_2에 저장
 
+	if (strcmp(sign, "add") == 0) { // 만약 add 라면
+		printf("add: %f\n", num_1 + num_2); // 더한 결과값을 출력
+	}
+	else if (strcmp(sign, "sub") == 0) { // 만약 sub 이라면
+		printf("sub: %f\n", num_1 - num_2); // 뺀 결과값을 출력
+	}
+	else if (strcmp(sign, "mul") == 0) { // 만약 mul 이라면
+		printf("mul: %f\n", num_1 * num_2); // 곱한 결과값을 출력
+	}
+	else if (strcmp(sign, "div") == 0 && num_2 != 0) { // 만약 div이고 나누는 값이 0이 아니라면
+		printf("div: %f\n", num_1 / num_2); // 나눈 결과값을 출력
+	}
+	else if (strcmp(sign, "div") == 0 && num_2 == 0) { // 만약 div이고 나누는 값이 0이라면
+		printf("0으로 나눌 수 없습니다.\n"); // 나눌 수 없다는 안내문구를 출력
+	}
 
+	return 0;
+
+}
+```
+
+#### 문제2. 메시지 안호화 실습 예제를 아래 사항을 추가하여 보완하시오.
+#### 복호화 하는 함수 decrypt()도 추가
+#### 무한루프 안에 메뉴를 만들어서 사용자로 하여금 암호화, 복호화, 종료 중에서 선택 (1 - 암호화, 2 - 복호화, 3 - 종료)
+
+```c
+#define _CRT_SECURE_NO_WARNINGS // scanf의 보안 오류를 무시하기 위해 define
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
+
+void encrypt(char cipher[], int shift); // 암호화 함수 정의
+void decrypt(char cipher[], int shift); // 복호화 함수 정의
+
+int main(void)
+{
+
+	char cipher[50]; // 암호문, 복호문, 원문을 저장할 문자열 선언
+	int shift = 3; // 암호 키를 3으로 선언
+	int num; // 작업 번호를 저장할 변수 선언
+
+	while (1) { // 값이 참이라면 계속 반복
+
+		printf("원하는 작업을 선택하시오.\n\n1. 암호화\n2. 복호화\n3. 종료\n\n"); // 원하는 작업을 선택하라는 안내문구 출력
+		scanf("%d%*c", &num); // 1, 2, 3 중 한가지를 선택하여 num에 저장
+
+		if (num == 1) { // 만약 암호화를 선택했다면
+
+			printf("문자열을 입력하시오: "); // 암호화 할 문자열을 입력하라는 안내문구 출력
+			gets_s(cipher, 50); // gets_s를 사용하여 한 문장의 문자열 입력
+			encrypt(cipher, shift); // 암호화 함수를 사용하여 암호키만큼 옮겨 암호화 후 암호문 출력
+			num = 0; // 작업 번호를 0으로 초기화
+
+		}
+		else if(num == 2) { // 만약 복호화를 선택했다면
+			
+			printf("문자열을 입력하시오: "); // 복호화 할 문자열을 입력하라는 안내문구 출력
+			gets_s(cipher, 50); // gets_s를 사용하여 한 문장의 문자열 입력
+			decrypt(cipher, shift); // 복호화 함수를 사용하여 암호키만큼 옮겨 복호화 후 원문 출력
+			num = 0; // 작업 번호를 0으로 초기화
+
+		} else if(num == 3) { // 만약 종료를 선택했다면
+
+			break; // 반복문을 탈출한다.
+		}
+	}
+
+	return 0;
+
+}
+
+void encrypt(char cipher[], int shift)
+{
+	int i = 0; // i를 0으로 선언
+	while (cipher[i] != '\0') { // 저장된 문자가 없을 때 까지 반복
+		if (cipher[i] >= 'a' && cipher[i] <= 'z') { // 만약 a~z 사이라면
+			cipher[i] += shift; // 암호키 만큼 이동
+			if (cipher[i] > 'z') // 이동 후 z보다 크다면
+				cipher[i] -= 26; // 26만큼 빼서 저장
+		}
+		i++; // 다음 문자로 이동하기 위해 i 값을 1씩 증가
+	}
+	printf("암호화된 문자열: %s\n", cipher); // 반복문이 끝나면 암호문 출력
+}
+
+void decrypt(char cipher[], int shift) {
+
+	int i = 0; // i를 0으로 선언
+	while (cipher[i] != '\0') { // 저장된 문자가 없을 때 까지 반복
+		if (cipher[i] >= 'a' && cipher[i] <= 'z') { // 만약 a~z 사이라면
+			cipher[i] -= shift; // 암호키 만큼 반대로 이동
+			if (cipher[i] < 'a') // 이동 후 a보다 작다면
+				cipher[i] += 26; // 26만큼 더해서 저장
+		}
+		i++; // 다음 문자로 이동하기 위해 i값을 1씩 증가
+	}
+	printf("복호화된 문자열: %s\n", cipher); // 반복문이 끝나면 복호문 출력
+
+}
+```
+
+#### 문제3. 행맨게임 실습 예제를 아래 사항을 추가하여 보완하시오.
+#### 여러 개의 단어들이 들어 있는 2차원 배열을 생성하여서 랜덤하게 하나의 정답을 고르도록 함
+#### 정답과 같은 패턴의 밑줄을 자동으로 생성하여 표시하게 함
+####  ex) meet at midnight => ____ __ ________
+#### 일정한 횟수만 시도 가능하게 함(가능한 최대 횟수 초과시 메세지 출력)
+#### 정답을 맞추었을 때 "성공"이라는 메시지 출력
+
+```c
+#define _CRT_SECURE_NO_WARNINGS // 보안 오류를 무시하기 위해 define
+#define chance 20 // 횟수를 정의한다.
+#define SIZE 5 // 정답의 개수를 정의한다.
+
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include 
+#include <string.h> // 문자열과 관련된 함수를 사용하기 위해 include 
+#include <time.h> // 난수를 생성할 때 시드값을 설정하기 위해 include
+
+int check(char s[], char a[], char ch); // 정답 비교를 위한 함수 정의
+
+int main(void)
+{
+
+	srand(time(NULL)); // 랜덤 시드 설정
+
+	char solution[SIZE][100] = { // 답 배열 저장
+		{"meet at midnight"},
+		{"this is koreatech"},
+		{"nice to meet you"},
+		{"computer science"},
+		{"this is hang man"}
+	};
+
+	char answer[5][100]; // 답 글자 수 저장을 위한 배열 선언
+
+	for (int i = 0; i < SIZE; i++) { // 정답의 개수만큼 반복하여
+		char ans[100]; // 임시로 정답을 저장할 배열 선언
+		strcpy(ans, solution[i]); // solution[i]에 저장되어있는 정답을 ans에 복사
+		for (int j = 0; j < strlen(ans); j++) { // ans의 길이만큼 반복하여
+			if (ans[j] != ' ') { // 공백이 아닌 문자가 있다면
+				ans[j] = '_'; // 그 문자를 밑줄로 변경
+			}
+		}
+		strcpy(answer[i], ans); // 밑줄로 전부 변경된 ans문자열을 answer[i]에 복사
+	}
+
+	char ch; // 추측한 글자 저장을 위해 선언
+
+	int num = rand() % 5; // 답 중에서 랜덤으로 뽑기 위해 1~5 중 하나의 난수 생성
+	int i = 1; // 기회를 세기 위해 i 를 1로 설정
+
+	printf("기회: 총 %d번\n", chance); // 총 기회가 몇 번인지 출력
+
+	while (i <= chance) { // 기회를 전부 소모하기 전까지 반복
+
+		printf("\n%d번째\n", i); // 몇 번째 기회인지 출력
+		printf("입력된 문자열 : %s \n", answer[num]); // 추측한 글자가 맞는지 출력
+		printf("글자를 추측하시오: "); // 추측한 글자 입력안내 문구 출력
+
+		ch = getchar(); // 추측한 글자를 ch에 저장
+
+		if (check(solution[num], answer[num], ch) == 1) { // check함수에 매개변수로 전달하여 만약 리턴값이 1이라면
+			printf("성공\n정답: %s\n", solution[num]); // 성공이라는 문구와 함께 정답 공개
+			break; // 반복문 탈출
+		}
+
+		i++; // 횟수 증가
+
+		// fflush(stdin); // 줄바꿈 문자 제거, VS2015부터 안됨.
+		getchar(); // 줄바꿈 문자 제거 올바른 방법
+
+	}
+
+	if (i > chance) { // 만약 모든 기회를 소진했다면
+		printf("실패\n정답: %s\n", solution[num]); // 실패라는 문구와 함께 정답 공개
+	}
+
+	return 0; // 프로그램 종료
+}
+
+int check(char s[], char a[], char ch)
+{
+
+	int i;
+
+	for (i = 0; s[i] != NULL; i++) { // 정답과 추측 글자를 비교하여
+
+		if (s[i] == ch) { // 만약 같은것이 있다면
+			a[i] = ch; // 추측 문자열에 추측 글자로 바꾸어서 저장
+		}
+
+	}
+
+	if (strcmp(s, a) == 0) { // 만약 전부 일치한다면
+		return 1; // 1 반환
+
+	}// 정답과 일치하는지를 검사
+	else // 그게 아니라면
+	{
+
+		return 0; // 0 반환
+
+	}
+
+}
+```
+
+## 과제 10
+#### 문제1. 구조체 강의자료의 실습:벡터연산 소스에서 함수 get_vector_sum()를 vector 구조체에 대한 포인터를 사용하여 바꾸고 테스트하시오.
+
+```c
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
+
+struct vector { // x, y좌표를 멤버로 하는 구조체 vector 선언
+
+	float x;
+	float y;
+
+};
+
+int main(void)
+{
+
+	struct vector a = { 2.0, 3.0 }; // a 구조체 변수의 멤버가 각각 2.0, 3.0으로 선언
+	struct vector b = { 5.0, 6.0 }; // b 구조체 변수의 멤버가 각각 5.0, 6.0으로 선언
+
+	struct vector *p1; // 구조체 포인터 변수 p1 선언
+	struct vector *p2; // 구조체 포인터 변수 p2 선언
+
+	p1 = &a; // 구조체 포인터 변수 p1과 구조체 변수 a의 주소를 연결
+	p2 = &b; // 구조체 포인터 변수 p2와 구조체 변수 b의 주소를 연결
+
+	struct vector sum = { (*p1).x + (*p2).x, (*p1).y + (*p2).y }; // 구조체 변수 sum의 멤버를 각각 구조체 포인터 변수에 연결된 구조체 변수들의 각 x값과 y값의 합으로 선언
+
+	printf("벡터의 합은 (%f, %f)입니다.\n", sum.x, sum.y); // 구조체 변수 sum의 x와 y값 출력
+
+	return 0; // 프로그램 종료
+}
+```
+
+#### 문제2. 2차원 배열의 특정한 열의 원소들의 평균을 구하는 함수를 작성하고 테스트하시오.
+
+```c
+#define SIZE 5 // 2차원 배열의 크기를 define
+
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
+#include <stdlib.h> // random함수를 사용하기 위해 include
+#include <time.h> // random함수의 seed를 설정하기 위해 include
+
+float list_ave(int* num_list); // 평균을 반환하는 함수 선언
+
+int main() {
+
+	srand(time(NULL)); // seed를 time(NULL)로 설정
+
+	int num_list[SIZE][SIZE] = { 0 }; // 2차원 배열 초기화
+	int row = rand() % SIZE; // 열 랜덤하게 생성
+
+	for (int i = 0; i < SIZE; i++) { // 2중 for문을 이용해서
+		for (int j = 0; j < SIZE; j++) {
+			num_list[j][i] = rand() % 100; // num_list에 난수 저장한다. 이때 행과 열을 바꾸어 저장한다.
+		}
+	}
+
+	for (int i = 0; i < SIZE; i++) { // 2중 for문을 이용해서
+		printf("%d 열 >> ", i);
+		for (int j = 0; j < SIZE; j++) {
+			printf("%d ", num_list[i][j]); // num_list에 저장된 난수값들 출력
+		}
+		printf("\n");
+	}
+
+	printf("%d열의 평균: %f", row, list_ave(num_list[row])); // 해당 row의 평균값 출력
+
+	return 0;
+}
+
+float list_ave(int* num_list) { // 평균을 구하는 함수 정의
+
+	float ave = 0; // 평균값 0으로 초기화
+
+	for (int i = 0; i < SIZE; i++) { // 포인터로 전달받은 배열의 총 합 구하고
+		ave = *(num_list + i) + ave;
+	}
+
+	ave = ave / SIZE; // 배열의 총 개수로 나눠서 평균 저장
+
+	return ave; // 평균 반환
+}
+```
+
+#### 문제3. int형 배열과 int형 포인터를 받아서 포인터가 배열의 가장 작은 값을 가리키게 하는 함수 set_min_ptr()을 구현하고 테스트하시오. 함수 원형 : void set_min_ptr(int m[], int size, int **pmin);
+
+```c
+#define SIZE 50 // 배열의 크기 define
+
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
+#include <stdlib.h> // random 함수를 사용하기 위해  include
+#include <time.h> // random 함수의 seed를 설정하기 위해 include
+
+void set_min_ptr(int m[], int size, int** pmin); // 포인터가 배열의 가장 작은 값을 가리키게 하는 함수 선언
+
+int main() {
+
+	srand(time(NULL)); // seed를 time(NULL)로 설정
+
+	int num[SIZE] = { 0 }; // 정수형 배열 초기화
+	int *p; // 정수형 포인터 선언
+
+	p = num[0]; // 포인터와 배열의 맨 첫 번째 값 연결
+
+	for (int i = 0; i < SIZE; i++) { // 배열의 크기만큼 반복하여
+		num[i] = rand() % 255; // 난수 저장
+	}
+
+	set_min_ptr(num, SIZE, &p); // 포인터가 배열의 가장 작은 값을 가리키도록하는 함수 호출
+
+	for (int i = 0; i < SIZE; i++) { // 배열의 크기만큼 반복하여
+		printf("num[%d] = %d\n", i, num[i]); // 배열의 값 출력
+	}
+
+	printf("최소값: %d", *p); // 포인터와 연결된 변수의 값 출력
+
+	return 0;
+
+}
+
+void set_min_ptr(int m[], int size, int** pmin) { // 포인터가 배열의 가장 작은 값과 연결되도록 하는 함수 정의
+
+	int min = m[0]; // 최소값을 전달받은 배열의 맨 앞 원소로 선언
+
+	for (int i = 0; i < SIZE; i++) { // 배열의 크기만큼 반복하여
+		if (min >= m[i]) { // 만약 min이 배열의 원소보다 크다면
+			*pmin = &m[i]; // 포인터의 위치를 배열의 현재 원소와 연결하고
+			min = m[i]; // min에 배열의 현재 원소를 저장한다.
+		}
+	}
+
+}
+
+```
+
+#### 문제4. main() 함수의 인수로 달러금액과 환율(원/달러)을 입력받아서 원화금액을 계산하는 프로그램을 작성하시오. (적절한 개수의 인수가 입력되지 않으면 “사용법”을 화면에 표시)
+
+```c
+#include <stdio.h> // 기본적인 함수를 사용하기 위해 include
+#include <stdlib.h> // atoi를 사용하기 위해 include 
+
+int main(int argc, char* argv[]) { // 인수를 입력받는 상태의 main함수
+
+	if (argc < 3) { // 만약 입력한 인수가 3개 미만이라면
+		printf("입력한 인수가 부족합니다.\nex)exchange_rate.exe 100 1200\n"); // 인수가 부족함을 알리고 예시를 보여준다.
+	}
+	else { // 그게 아니라면
+		printf("달러: %s   환율: %s\n", argv[1], argv[2]); // 달러와 환율을 출력하고
+		printf("원화로 변환: %d", atoi(argv[1]) * atoi(argv[2])); // 환율 계산을 통해 원화로 변환하여 원화까지 출력한다.
+	}
+}
+```
+
+## 과제10
+#### 문제1. 텍스트 파일을 읽어서 문자수, 단어수, 라인(line)수를 계산하여 출력하는 프로그램을 작성하시오.
+
+```c
+
+```
+
+#### 문제2. 다음과 같이 학생들의 교과목성적이 저장되어 있는 텍스트파일을 읽어서 성적의 평균을 구하여 파일에 쓰는 프로그램을 작성하시오. 평균은 소수점 2자리까지 출력(샘플 텍스트파일 : student_score.txt)
 
 
 
