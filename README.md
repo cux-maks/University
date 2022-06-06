@@ -2,7 +2,6 @@
 
 ###### KOREATECH COMPUTER SCIENCE & ENGINEERING JO BYEONGHA
 ###### [톡명함](https://namecard.kakao.com/jomu)
-###### ![](./명함/명함.png)
 
 ### 2021년 1학기 시간표 🕰
 
