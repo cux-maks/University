@@ -46,7 +46,7 @@ class n_member {
 public:
 
 	n_member() {}
-	n_member(string _name, string _tel,int _age) {
+	n_member(string _name, string _tel, int _age) {
 		name = _name;
 		tel = _tel;
 		age = _age;
