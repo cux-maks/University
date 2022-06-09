@@ -22,6 +22,22 @@
 
 using namespace std;
 
+void Save_Members_Data(vector<member>& m);
+
+int main() {
+
+	vector<member> u;
+
+	member u1("이름", "아이디", "비밀번호", "010-1234-5678", "이@메일.com", 25);
+
+	u.push_back(u1);
+
+	Save_Members_Data(u);
+
+	return 0;
+
+}
+
 void Save_Members_Data(vector<member>& m) {
 
 	ofstream outfile("Member_Data.txt", ios_base::out);
@@ -44,20 +60,6 @@ void Save_Members_Data(vector<member>& m) {
 		outfile << buffer << endl;
 
 	}
-
-}
-
-int main() {
-
-	vector<member> u;
-
-	member u1("이름", "아이디", "비밀번호", "010-1234-5678", "이@메일.com", 25);
-
-	u.push_back(u1);
-
-	Save_Members_Data(u);
-
-	return 0;
 
 }
 ```
