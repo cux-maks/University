@@ -16,13 +16,46 @@
 ###### \<PC_Management.cpp\>
 ```c++
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include "member.h"
 
 using namespace std;
 
+void Save_Members_Data(vector<member>& m) {
+
+	ofstream outfile("Member_Data.txt", ios_base::out);
+
+	for (int i = 0; i < m.size(); i++) {
+
+		string buffer = m[i].GetName();
+		buffer += " ";
+		buffer += to_string(m[i].GetAge());
+		buffer += " ";
+		buffer += m[i].GetId();
+		buffer += " ";
+		buffer += m[i].GetPw();
+		buffer += " ";
+		buffer += m[i].GetTel();
+		buffer += " ";
+		buffer += m[i].GetEmail();
+		buffer += " ";
+		buffer += m[i].GetGrade();
+		outfile << buffer << endl;
+
+	}
+
+}
+
 int main() {
 
-	
+	vector<member> u;
+
+	member u1("이름", "아이디", "비밀번호", "010-1234-5678", "이@메일.com", 25);
+
+	u.push_back(u1);
+
+	Save_Members_Data(u);
 
 	return 0;
 
@@ -51,7 +84,7 @@ public:
 		tel = _tel;
 		age = _age;
 	}
-	n_member(n_member& u) {
+	n_member(const n_member& u) {
 		name = u.name;
 		tel = u.tel;
 		age = u.age;
@@ -68,17 +101,17 @@ public:
 		cout << "Tel: " << tel << endl;
 	}
 
-	virtual string GetName() { return name; }
-	virtual string GetTel() { return tel; }
-	virtual int GetAge() { return age; }
+	string GetName() { return name; }
+	string GetTel() { return tel; }
+	int GetAge() { return age; }
 
-	virtual void SetName(string _name) { name = _name; }
-	virtual void SetTel(string _tel) { tel = _tel; }
-	virtual void SetAge(int _age) { age = _age; }
-
-	virtual void DelName() { name.clear(); }
-	virtual void DelTel() { tel.clear(); }
-	virtual void DelAge() { age = 0; }
+	void SetName(string _name) { name = _name; }
+	void SetTel(string _tel) { tel = _tel; }
+	void SetAge(int _age) { age = _age; }
+	
+	void DelName() { name.clear(); }
+	void DelTel() { tel.clear(); }
+	void DelAge() { age = 0; }
 
 };
 ```
@@ -93,62 +126,75 @@ public:
 
 using namespace std;
 
-class member : public n_member {
+class member {
 
-	n_member own;
-	string id, pw, email;
+	string name, id, pw, email, tel, grade;
+	int age;
 
 public:
 
 	member() {}
-	member(string _name, string _id, string _pw, string _tel, string _email, int _age):own(_name, _tel, _age) {
+	member(string _name, string _id, string _pw, string _tel, string _email, int _age, string _grade = "Bronze") {
+		name = _name;
+		tel = _tel;
 		id = _id;
 		pw = _pw;
 		email = _email;
+		age = _age;
+		grade = _grade;
 	}
-	member(member& u) {
-		own.SetName(u.GetName());
-		own.SetTel(u.GetTel());
-		own.SetAge(u.GetAge());
+	member(const member& u) {
+		name = u.name;
+		tel = u.tel;
 		id = u.id;
 		pw = u.pw;
 		email = u.email;
+		age = u.age;
+		grade = u.grade;
 	}
 	~member() {
+		name.clear();
+		tel.clear();
 		id.clear();
 		pw.clear();
 		email.clear();
+		grade.clear();
+		age = 0;
 	}
 
 	void DispInfo() {
-		cout << "이름: " << own.GetName() << endl;
-		cout << "나이: " << own.GetAge() << endl;
+		cout << "이름: " << name << endl;
+		cout << "나이: " << age << endl;
 		cout << "ID: " << id << endl;
 		cout << "PW: " << pw << endl;
-		cout << "Tel: " << own.GetTel() << endl;
+		cout << "회원 등급: " << grade << endl;
+		cout << "Tel: " << tel << endl;
 		cout << "E-mail: " << email << endl;
 	}
 
-	string GetName() { return own.GetName(); }
-	string GetTel() { return own.GetTel(); }
+	string GetName() { return name; }
+	string GetTel() { return tel; }
 	string GetId() { return id; }
 	string GetPw() { return pw; }
 	string GetEmail() { return email; }
-	int GetAge() { return own.GetAge(); }
+	string GetGrade() { return grade; }
+	int GetAge() { return age; }
 
 	void SetId(string _id) { id = _id; }
 	void SetPw(string _pw) { pw = _pw; }
 	void SetEmail(string _email) { email = _email; }
-	void SetName(string _name) { own.SetName(_name); }
-	void SetTel(string _tel) { own.SetTel(_tel); }
-	void SetAge(int _age) { own.SetAge(_age); }
+	void SetName(string _name) { name = _name; }
+	void SetTel(string _tel) { tel = _tel; }
+	void SetGrade(string _grade) { grade = _grade; }
+	void SetAge(int _age) { age = _age; }
 
 	void DelId() { id.clear(); }
 	void DelPw() { pw.clear(); }
 	void DelEmail() { email.clear(); }
-	void DelName() { own.DelName(); }
-	void DelTel() { own.DelTel(); }
-	void DelAge() { own.DelAge(); }
+	void DelName() { name.clear(); }
+	void DelTel() { tel.clear(); }
+	void DelGrade() { grade.clear(); }
+	void DelAge() { age = 0; }
 
 };
 ```
