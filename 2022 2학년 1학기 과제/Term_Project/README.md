@@ -39,6 +39,7 @@ n_member new_Non_Member();
 int main() {
 
 	vector<member> u;
+	vector<n_member> n_u;
 
 	Read_Save_Data(u);
 
@@ -46,46 +47,63 @@ int main() {
 	bool admin_login = 0;
 	bool login = 0;
 	int login_cnt = 0;
+	int state = 0;
 
-	do {
+home:
 
-		cout << "---------- 뭉치 PC ----------" << endl;
-		cout << "ID: ";
-		cin >> id_input;
-		cout << "PW: ";
-		cin >> pw_input;
+	cout << "---------- ΩOhm PC ----------" << endl;
+	cout << "1. 로그인" << endl;
+	cout << "2. 회원가입" << endl;
+	cout << "3. 비회원 이용" << endl;
+	cout << "4. 프로그램 종료" << endl;
+	cout << ">> ";
+	cin >> state;
 
-		if (id_input == admin_id && pw_input == admin_pw) {
-			cout << "관리자 로그인 성공." << endl;
-			login = 1;
-			admin_login = 1;
-		}
-		else {
+	if (state == 1) {
 
-			if (u.size() == 0) {
+		do {
 
-				cout << "로그인 실패." << endl;
-				login_cnt += 1;
-				Sleep(1000);
-				system("cls");
+			system("cls");
 
+			cout << "---------- ΩOhm PC Login ----------" << endl;
+			cout << "ID: ";
+			cin >> id_input;
+			cout << "PW: ";
+			cin >> pw_input;
+
+			if (id_input == admin_id && pw_input == admin_pw) {
+				cout << "관리자 로그인 성공." << endl;
+				login = 1;
+				admin_login = 1;
 			}
 			else {
 
-				for (int i = 0; i < u.size(); i++) {
+				if (u.size() == 0) {
 
-					if (id_input == u[i].GetId() && pw_input == u[i].GetPw()) {
+					cout << "로그인 실패." << endl;
+					login_cnt += 1;
+					Sleep(1000);
+					system("cls");
 
-						cout << "로그인 성공." << endl;
-						login = 1;
+				}
+				else {
 
-					}
-					else if (i == u.size()) {
+					for (int i = 0; i < u.size(); i++) {
 
-						cout << "로그인 실패." << endl;
-						login_cnt += 1;
-						Sleep(1000);
-						system("cls");
+						if (id_input == u[i].GetId() && pw_input == u[i].GetPw()) {
+
+							cout << "로그인 성공." << endl;
+							login = 1;
+
+						}
+						else if (i == u.size()) {
+
+							cout << "로그인 실패." << endl;
+							login_cnt += 1;
+							Sleep(1000);
+							system("cls");
+
+						}
 
 					}
 
@@ -93,18 +111,65 @@ int main() {
 
 			}
 
-		}
+			if (login_cnt == 5) {
 
-		if (login_cnt == 5) {
+				cout << "로그인 5회 실패." << endl;
+				cout << "프로그램을 종료합니다." << endl;
+				Sleep(500);
+				return 0;
 
-			cout << "로그인 5회 실패." << endl;
-			cout << "프로그램을 종료합니다." << endl;
-			Sleep(500);
-			return 0;
+			}
 
-		}
+		} while (login == 0);
+	}
+	else if (state == 2) {
 
-	} while (login == 0);
+		u.push_back(new_Member());
+		Save_Members_Data(u);
+		system("cls");
+		goto home;
+
+	}
+	else if (state == 3) {
+
+		n_u.push_back(new_Non_Member());
+
+	}
+	else if (state == 4) {
+
+		cout << "프로그램을 종료합니다." << endl;
+		return 0;
+
+	}
+	else {
+
+		cout << "해당 선택지는 존재하지 않습니다." << endl;
+		Sleep(500);
+		system("cls");
+		goto home;
+
+	}
+
+	system("cls");
+
+	login_cnt = 0;
+
+	if (admin_login == 1) {
+
+		cout << "---------- ΩOhm PC 관리 프로그램 ----------" << endl;
+
+	}
+	else if (state == 3) {
+
+		cout << "---------- ΩOhm PC 사용자 화면 ----------" << endl;
+		cout << "※비회원 이용자는 음식 주문 및 제자리 결제, 자리 이동 및 외출 또는 예약기능, 카운터 문의(메신저) 기능을 사용하실 수 없습니다." << endl;
+
+	}
+	else if(state == 1) {
+
+			cout << "---------- ΩOhm PC 사용자 화면 ----------" << endl;
+
+	}
 
 	return 0;
 
@@ -135,8 +200,11 @@ void Read_Save_Data(vector<member>& m) {
 				string email = result[4];
 				int age = stoi(result[5]);
 				string grade = result[6];
+				int point = stoi(result[7]);
 
-				member temp(name, id, pw, tel, email, age, grade);
+				member temp(name, id, pw, tel, email, age, grade, point);
+				
+				m.push_back(temp);
 
 			}
 
@@ -146,6 +214,11 @@ void Read_Save_Data(vector<member>& m) {
 			cout << "There is no data." << endl;
 
 		}
+
+	}
+	else {
+		
+		cout << "File open error" << endl;
 
 	}
 
@@ -180,6 +253,8 @@ void Save_Members_Data(vector<member>& m) {
 		buffer += to_string(m[i].GetAge());
 		buffer += " ";
 		buffer += m[i].GetGrade();
+		buffer += " ";
+		buffer += to_string(m[i].GetPoint());
 		outfile << buffer << endl;
 
 	}
@@ -206,6 +281,8 @@ member new_Member() {
 	cin >> email;
 
 	member temp(name, id, pw, tel, email, age);
+
+	cout << "회원가입에 성공했습니다." << endl;
 
 	return temp;
 
@@ -250,19 +327,18 @@ vector<string> split(string str, char Delimiter) {
 
 #include <iostream>
 #include <string>
-#include "non_member.h"
 
 using namespace std;
 
 class member {
 
 	string name, id, pw, email, tel, grade;
-	int age;
+	int age, point;
 
 public:
 
 	member() {}
-	member(string _name, string _id, string _pw, string _tel, string _email, int _age, string _grade = "Bronze") {
+	member(string _name, string _id, string _pw, string _tel, string _email, int _age, string _grade = "Bronze", int _point = 0) {
 		name = _name;
 		tel = _tel;
 		id = _id;
@@ -270,6 +346,7 @@ public:
 		email = _email;
 		age = _age;
 		grade = _grade;
+		point = _point;
 	}
 	member(const member& u) {
 		name = u.name;
@@ -279,6 +356,7 @@ public:
 		email = u.email;
 		age = u.age;
 		grade = u.grade;
+		point = u.point;
 	}
 	~member() {
 		name.clear();
@@ -288,6 +366,7 @@ public:
 		email.clear();
 		grade.clear();
 		age = 0;
+		point = 0;
 	}
 
 	void DispInfo() {
@@ -296,6 +375,7 @@ public:
 		cout << "ID: " << id << endl;
 		cout << "PW: " << pw << endl;
 		cout << "회원 등급: " << grade << endl;
+		cout << "적립 포인트: " << point << endl;
 		cout << "Tel: " << tel << endl;
 		cout << "E-mail: " << email << endl;
 	}
@@ -307,6 +387,7 @@ public:
 	string GetEmail() { return email; }
 	string GetGrade() { return grade; }
 	int GetAge() { return age; }
+	int GetPoint() { return point; }
 
 	void SetId(string _id) { id = _id; }
 	void SetPw(string _pw) { pw = _pw; }
@@ -315,6 +396,7 @@ public:
 	void SetTel(string _tel) { tel = _tel; }
 	void SetGrade(string _grade) { grade = _grade; }
 	void SetAge(int _age) { age = _age; }
+	void SetPoint(int _point) { point = _point; }
 
 	void DelId() { id.clear(); }
 	void DelPw() { pw.clear(); }
@@ -322,6 +404,61 @@ public:
 	void DelName() { name.clear(); }
 	void DelTel() { tel.clear(); }
 	void DelGrade() { grade.clear(); }
+	void DelAge() { age = 0; }
+	void DelPoint() { point = 0; }
+
+};
+```
+
+###### \<non_member.h\>
+```c++
+#pragma once
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class n_member {
+
+	string name, tel;
+	int age;
+
+public:
+
+	n_member() {}
+	n_member(string _name, string _tel, int _age) {
+		name = _name;
+		tel = _tel;
+		age = _age;
+	}
+	n_member(const n_member& u) {
+		name = u.name;
+		tel = u.tel;
+		age = u.age;
+	}
+	~n_member() {
+		name.clear();
+		tel.clear();
+		age = 0;
+	}
+
+	virtual void DispInfo() {
+		cout << "이름: " << name << endl;
+		cout << "나이: " << age << endl;
+		cout << "Tel: " << tel << endl;
+	}
+
+	string GetName() { return name; }
+	string GetTel() { return tel; }
+	int GetAge() { return age; }
+
+	void SetName(string _name) { name = _name; }
+	void SetTel(string _tel) { tel = _tel; }
+	void SetAge(int _age) { age = _age; }
+	
+	void DelName() { name.clear(); }
+	void DelTel() { tel.clear(); }
 	void DelAge() { age = 0; }
 
 };
