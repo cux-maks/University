@@ -18,23 +18,125 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <Windows.h>
+#include <sstream>
 #include "member.h"
+#include "non_member.h"
+
+#define admin_id "mc_admin"
+#define admin_pw "mc_716_admin"
 
 using namespace std;
 
+
+void Delete_Save_Data();
+void Read_Save_Data(vector<member>& m);
 void Save_Members_Data(vector<member>& m);
+vector<string> split(string str, char Delimiter);
+member new_Member();
+n_member new_Non_Member();
 
 int main() {
 
 	vector<member> u;
 
-	member u1("이름", "아이디", "비밀번호", "010-1234-5678", "이@메일.com", 25);
+	Read_Save_Data(u);
 
-	u.push_back(u1);
+	string id_input, pw_input;
+	bool admin_login = 0;
+	bool login = 0;
+	int login_cnt = 0;
 
-	Save_Members_Data(u);
+	do {
+
+		cout << "---------- 뭉치 PC ----------" << endl;
+		cout << "ID: ";
+		cin >> id_input;
+		cout << "PW: ";
+		cin >> pw_input;
+
+		if (id_input == admin_id && pw_input == admin_pw) {
+			cout << "관리자 로그인 성공." << endl;
+			login = 1;
+			admin_login = 1;
+		}
+		else {
+
+			for (int i = 0; i < u.size(); i++) {
+				if (id_input == u[i].GetId() && pw_input == u[i].GetPw()) {
+					cout << "로그인 성공." << endl;
+					login = 1;
+				}
+				else if (i == u.size()) {
+					cout << "로그인 실패." << endl;
+					login_cnt += 1;
+					Sleep(1000);
+					system("cls");
+				}
+			}
+
+		}
+
+		if (login_cnt == 5) {
+
+			cout << "5회 로그인 실패." << endl;
+			cout << "프로그램을 종료합니다." << endl;
+			return 0;
+
+		}
+
+	} while (login == 0);
 
 	return 0;
+
+}
+
+void Read_Save_Data(vector<member>& m) {
+
+	ifstream readData("Member_Data.txt");
+
+	if (readData.is_open()) {
+
+		string first_line;
+		getline(readData, first_line);
+		int n = stoi(first_line);
+
+		if (n != 0) {
+
+			for (int i = 0; i < n; i++) {
+
+				string str;
+				getline(readData, str);
+
+				vector<string> result = split(str, ' ');
+				string name = result[0];
+				string id = result[1];
+				string pw = result[2];
+				string tel = result[3];
+				string email = result[4];
+				int age = stoi(result[5]);
+				string grade = result[6];
+
+				member temp(name, id, pw, tel, email, age, grade);
+
+			}
+
+		}
+		else {
+
+			cout << "There is no data." << endl;
+
+		}
+
+	}
+
+}
+
+void Delete_Save_Data() {
+
+	ofstream outfile("Member_Data.txt", ios_base::out);
+
+	outfile << "Warning, Clear." << endl;
 
 }
 
@@ -42,11 +144,11 @@ void Save_Members_Data(vector<member>& m) {
 
 	ofstream outfile("Member_Data.txt", ios_base::out);
 
+	outfile << m.size() << endl;
+
 	for (int i = 0; i < m.size(); i++) {
 
 		string buffer = m[i].GetName();
-		buffer += " ";
-		buffer += to_string(m[i].GetAge());
 		buffer += " ";
 		buffer += m[i].GetId();
 		buffer += " ";
@@ -56,11 +158,70 @@ void Save_Members_Data(vector<member>& m) {
 		buffer += " ";
 		buffer += m[i].GetEmail();
 		buffer += " ";
+		buffer += to_string(m[i].GetAge());
+		buffer += " ";
 		buffer += m[i].GetGrade();
 		outfile << buffer << endl;
 
 	}
 
+}
+
+member new_Member() {
+
+	string name, id, pw, email, tel;
+	int age;
+
+	cout << "---------- 회원가입 ----------" << endl;
+	cout << "ID: ";
+	cin >> id;
+	cout << "PW: ";
+	cin >> pw;
+	cout << "이름: ";
+	cin >> name;
+	cout << "나이: ";
+	cin >> age;
+	cout << "전화번호: ";
+	cin >> tel;
+	cout << "e-mail: ";
+	cin >> email;
+
+	member temp(name, id, pw, tel, email, age);
+
+	return temp;
+
+}
+
+n_member new_Non_Member() {
+
+	string name, tel;
+	int age;
+
+	cout << "---------- 비회원 필수 정보 입력 ----------" << endl;
+	cout << "이름: ";
+	cin >> name;
+	cout << "나이: ";
+	cin >> age;
+	cout << "전화번호: ";
+	cin >> tel;
+
+	n_member temp(name, tel, age);
+
+	return temp;
+
+}
+
+vector<string> split(string str, char Delimiter) {
+	istringstream iss(str);
+	string buffer;
+
+	vector<string> result;
+
+	while (getline(iss, buffer, Delimiter)) {
+		result.push_back(buffer);
+	}
+
+	return result;
 }
 ```
 
