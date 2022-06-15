@@ -62,25 +62,44 @@ int main() {
 		}
 		else {
 
-			for (int i = 0; i < u.size(); i++) {
-				if (id_input == u[i].GetId() && pw_input == u[i].GetPw()) {
-					cout << "로그인 성공." << endl;
-					login = 1;
+			if (u.size() == 0) {
+
+				cout << "로그인 실패." << endl;
+				login_cnt += 1;
+				Sleep(1000);
+				system("cls");
+
+			}
+			else {
+
+				for (int i = 0; i < u.size(); i++) {
+
+					if (id_input == u[i].GetId() && pw_input == u[i].GetPw()) {
+
+						cout << "로그인 성공." << endl;
+						login = 1;
+
+					}
+					else if (i == u.size()) {
+
+						cout << "로그인 실패." << endl;
+						login_cnt += 1;
+						Sleep(1000);
+						system("cls");
+
+					}
+
 				}
-				else if (i == u.size()) {
-					cout << "로그인 실패." << endl;
-					login_cnt += 1;
-					Sleep(1000);
-					system("cls");
-				}
+
 			}
 
 		}
 
 		if (login_cnt == 5) {
 
-			cout << "5회 로그인 실패." << endl;
+			cout << "로그인 5회 실패." << endl;
 			cout << "프로그램을 종료합니다." << endl;
+			Sleep(500);
 			return 0;
 
 		}
@@ -223,60 +242,6 @@ vector<string> split(string str, char Delimiter) {
 
 	return result;
 }
-```
-
-###### \<non_member.h\>
-```c++
-#pragma once
-
-#include <iostream>
-#include <string>
-
-using namespace std;
-
-class n_member {
-
-	string name, tel;
-	int age;
-
-public:
-
-	n_member() {}
-	n_member(string _name, string _tel, int _age) {
-		name = _name;
-		tel = _tel;
-		age = _age;
-	}
-	n_member(const n_member& u) {
-		name = u.name;
-		tel = u.tel;
-		age = u.age;
-	}
-	~n_member() {
-		name.clear();
-		tel.clear();
-		age = 0;
-	}
-
-	virtual void DispInfo() {
-		cout << "이름: " << name << endl;
-		cout << "나이: " << age << endl;
-		cout << "Tel: " << tel << endl;
-	}
-
-	string GetName() { return name; }
-	string GetTel() { return tel; }
-	int GetAge() { return age; }
-
-	void SetName(string _name) { name = _name; }
-	void SetTel(string _tel) { tel = _tel; }
-	void SetAge(int _age) { age = _age; }
-	
-	void DelName() { name.clear(); }
-	void DelTel() { tel.clear(); }
-	void DelAge() { age = 0; }
-
-};
 ```
 
 ###### \<member.h\>
