@@ -19,14 +19,15 @@
 #define admin_id "ohm_admin"
 #define admin_pw "ohm_716_admin"
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <Windows.h>
-#include <sstream>
-#include <ctime>
-#include "member.h"
 #include "non_member.h"
+#include <Windows.h>
+#include <iostream>
+#include "member.h"
+#include <fstream>
+#include <sstream>
+#include <thread>
+#include <vector>
+#include <ctime>
 
 using namespace std;
 
@@ -36,6 +37,14 @@ struct tm* t = localtime(&curTime);
 void Delete_Save_Data(); // 모든 데이터 삭제
 void Read_Save_Data(vector<member>& m); // 데이터 불러오기
 void Save_Members_Data(vector<member>& m); // 데이터 저장
+void Grading_Members(vector<member>& m); // 회원 등급 설정
+void Time_Set_Members(vector<member>& m); // 회원 시간 정렬
+void Time_Pass_Members(vector<member>& m); // 회원 남은 시간 설정
+void Time_Dispaly_Members(vector<member>& m); // 회원 남은 시간 출력
+void Get_Message_to_Admin(); // 카운터로 온 메신저 확인하기
+void Get_Message(string id); // 카운터에서 온 메신저 확인하기
+void Send_Message_to_Admin(string id); // 카운터로 메신저 보내기
+void Send_Message(vector<member>& m); // 카운터에서 메신저 보내기
 int Get_Current_Year(); // 현재 년도 불러오기
 int Get_Current_Month(); // 현재 월 불러오기
 int Get_Current_Day(); // 현재 일 불러오기
@@ -52,6 +61,7 @@ int main() {
 	vector<n_member> n_u;
 
 	Read_Save_Data(u);
+	Grading_Members(u);
 
 home:
 
@@ -69,6 +79,13 @@ home:
 	cout << ">> ";
 	cin >> state;
 
+	/*
+	state 1 == 로그인
+	state 2 == 회원가입
+	state 3 == 비회원 이용
+	state 4 == 프로그램 종료
+	else == 유효하지 않은 선택지
+	*/
 	if (state == 1) { // 로그인
 
 		do {
@@ -167,7 +184,52 @@ home:
 
 	if (admin_login == 1) { // 관리자 로그인 화면
 
-		cout << "---------- ΩOhm PC 관리 프로그램 ----------" << endl;
+		do {
+
+			int sel;
+
+			cout << "---------- ΩOhm PC 관리 프로그램 ----------" << endl;
+			cout << "1. 회원 남은 시간 확인" << endl;
+			cout << "2. 메신저 확인" << endl;
+			cout << "3. 메신저 보내기" << endl;
+			cout << "4. 주문 확인" << endl;
+			cout << "5. 예약석 확인" << endl;
+			cout << "6. 로그아웃" << endl;
+			cout << ">> ";
+			cin >> sel;
+
+			if (sel == 1) {
+
+				Time_Pass_Members(u);
+				Time_Dispaly_Members(u);
+
+			}
+			else if (sel == 2) {
+
+				Get_Message_to_Admin();
+
+			}
+			else if (sel == 3) {
+
+				Send_Message(u);
+
+			}
+			else if (sel == 4) {
+
+			}
+			else if(sel == 5){
+
+			}
+			else if(sel == 6){
+
+				admin_login = -1;
+
+			}
+			else {
+
+			}
+
+		} while (admin_login == 1);
 
 	}
 	else if (state == 3) { // 비회원 사용 화면
@@ -179,6 +241,12 @@ home:
 	else if(state == 1) { // 회원 사용 화면
 
 			cout << "---------- ΩOhm PC 사용자 화면 ----------" << endl;
+
+	}
+
+	if (admin_login == -1) {
+
+		goto home;
 
 	}
 
@@ -206,21 +274,9 @@ void Read_Save_Data(vector<member>& m) {
 				getline(readData, str);
 
 				vector<string> result = split(str, ' ');
-				string name = result[0];
-				string id = result[1];
-				string pw = result[2];
-				string tel = result[3];
-				string email = result[4];
-				int age = stoi(result[5]);
-				string grade = result[6];
-				int point = stoi(result[7]);
-				vector<string> buffer = split(result[8], ':');
-				vector<int> last_time;
-				for (int i = 0; i < 6; i++) {
-					last_time.push_back(stoi(buffer[i]));
-				}
+				vector<string> left_time = split(result[9], ':');
 
-				member temp(name, id, pw, tel, email, age, grade, point, last_time);
+				member temp(result[0], result[1], result[2], result[3], result[4], stoi(result[5]), result[6], stoi(result[7]), stoi(result[8]), stoi(left_time[0]), stoi(left_time[1]), stoi(left_time[2]));
 				
 				m.push_back(temp);
 
@@ -256,7 +312,7 @@ void Save_Members_Data(vector<member>& m) {
 	ofstream outfile("Member_Data.txt", ios_base::out);
 
 	outfile << m.size() << endl;
-	outfile << Get_Current_Year() << ":" << Get_Current_Month() << ":" << Get_Current_Day() << ":" << Get_Current_Hour() << ":" << Get_Current_Min() << ":" << Get_Current_Sec() << endl;
+	outfile << "프로그램 종료 시각 >> " << Get_Current_Year() << ":" << Get_Current_Month() << ":" << Get_Current_Day() << ":" << Get_Current_Hour() << ":" << Get_Current_Min() << ":" << Get_Current_Sec() << endl;
 
 	for (int i = 0; i < m.size(); i++) {
 
@@ -276,20 +332,213 @@ void Save_Members_Data(vector<member>& m) {
 		buffer += " ";
 		buffer += to_string(m[i].GetPoint());
 		buffer += " ";
-		buffer += to_string(m[i].Get_Last_Year());
+		buffer += to_string(m[i].GetPayCnt());
+		buffer += " ";
+		buffer += to_string(m[i].GetLTH());
 		buffer += ":";
-		buffer += to_string(m[i].Get_Last_Month());
+		buffer += to_string(m[i].GetLTM());
 		buffer += ":";
-		buffer += to_string(m[i].Get_Last_Day());
-		buffer += ":";
-		buffer += to_string(m[i].Get_Last_Hour());
-		buffer += ":";
-		buffer += to_string(m[i].Get_Last_Min());
-		buffer += ":";
-		buffer += to_string(m[i].Get_Last_Sec());
+		buffer += to_string(m[i].GetLTS());
 		outfile << buffer << endl;
 
 	}
+
+}
+
+void Grading_Members(vector<member>& m) {
+
+	for (int i = 0; i < m.size(); i++) {
+
+		if (m[i].GetPayCnt() > 10) {
+			m[i].SetGrade("Silver");
+		}
+		else if(m[i].GetPayCnt() > 50) {
+			m[i].SetGrade("Gold");
+		}
+		else if (m[i].GetPayCnt() > 100) {
+			m[i].SetGrade("Platinum");
+		}
+		else if (m[i].GetPayCnt() > 200) {
+			m[i].SetGrade("Diamond");
+		}
+		else if (m[i].GetPayCnt() > 400) {
+			m[i].SetGrade("Master");
+		}
+		else if (m[i].GetPayCnt() > 800) {
+			m[i].SetGrade("Challenger");
+		}
+
+	}
+
+}
+
+void Time_Set_Members(vector<member>& m) {
+
+	for (int i = 0; i < m.size(); i++) {
+
+		int hour = m[i].GetLTH();
+		int min = m[i].GetLTM();
+		int sec = m[i].GetLTS();
+
+		if (sec / 60 >= 1) {
+			min += sec / 60;
+			sec %= 60;
+		}
+
+		if (min / 60 >= 1) {
+			hour += min / 60;
+			min %= 60;
+		}
+
+	}
+
+}
+
+void Time_Pass_Members(vector<member>& m) {
+
+	for (int i = 0; i < m.size(); i++) {
+
+		int pass_hour = Get_Current_Hour() - m[i].GetSTH();
+		int pass_min = Get_Current_Min() - m[i].GetSTM();
+		int pass_sec = Get_Current_Sec() - m[i].GetSTS();
+
+		long long int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
+		long long int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
+
+		if (pass_time >= left_time) {
+
+			m[i].DelSTH();
+			m[i].DelSTM();
+			m[i].DelSTS();
+			m[i].DelLTH();
+			m[i].DelLTM();
+			m[i].DelLTS();
+
+			cout << m[i].GetName() << "(" << m[i].GetId() << ")님의 사용 시간이 종료되었습니다." << endl;
+
+		}
+
+	}
+
+}
+
+void Time_Dispaly_Members(vector<member>& m) {
+
+	cout << "<남은 시간>" << endl;
+
+	for (int i = 0; i < m.size(); i++) {
+
+		int pass_hour = Get_Current_Hour() - m[i].GetSTH();
+		int pass_min = Get_Current_Min() - m[i].GetSTM();
+		int pass_sec = Get_Current_Sec() - m[i].GetSTS();
+
+		long long int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
+		long long int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
+
+		long long int time = left_time - pass_time;
+		
+		cout << "id: " << m[i].GetId() << "  " << time / 3600 << ":" << (time % 3600) / 60 << time % 60 << endl;
+
+	}
+
+}
+
+void Get_Message_to_Admin() {
+
+	ifstream to_admin("To_Admin.txt");
+
+	if (to_admin.is_open()) {
+
+		string text;
+
+		while (getline(to_admin, text)) {
+
+			cout << text;
+
+		}
+
+	}
+	else {
+
+		cout << "There is no data." << endl;
+
+	}
+
+	to_admin.close();
+
+}
+
+void Get_Message(string id) {
+
+	ifstream from_admin("From_Admin.txt");
+
+	if (from_admin.is_open()) {
+
+		string text;
+
+		while (getline(from_admin, text)) {
+
+			vector<string> buffer = split(text, ' ');
+
+			if (buffer[0] == id) {
+
+				cout << "admin: " << buffer[1] << endl;
+
+			}
+
+		}
+
+	}
+	else {
+
+		cout << "There is no data." << endl;
+
+	}
+
+	from_admin.close();
+
+}
+
+void Send_Message_to_Admin(string id) {
+
+	ofstream to_admin("To_Admin.txt", ios_base::app);
+
+	string buffer;
+
+	cout << ">> ";
+	cin >> buffer;
+	to_admin << id << " " << buffer << endl;
+
+	to_admin.close();
+
+}
+
+void Send_Message(vector<member>& m) {
+
+	ofstream from_admin("From_Admin.txt", ios_base::app);
+
+	string buffer;
+	int select = 0;
+
+	do {
+
+		cout << "보낼 사용자의 아이디를 선택하세요. (종료는 -1)" << endl;
+		for (int i = 0; i < m.size(); i++) {
+			cout << i + 1 << ". " << m[i].GetId() << endl;
+		}
+		cout << ">> ";
+		cin >> select;
+
+		cout << "<메시지 입력>" << endl;
+		cout << ">> ";
+		cin >> buffer;
+
+		from_admin << m[select - 1].GetId() << " " << buffer << endl;
+
+	} while (select != -1);
+	
+
+	from_admin.close();
 
 }
 
@@ -399,18 +648,17 @@ int Get_Current_Sec() {
 
 using namespace std;
 
-vector<int> null(6);
-
 class member {
 
 	string name, id, pw, email, tel, grade;
-	vector<int> last_time;
-	int age, point;
+	int age, point, pay_cnt;
+	int left_time_hour, left_time_min, left_time_sec;
+	int start_time_hour, start_time_min, start_time_sec;
 
 public:
 
 	member() {}
-	member(string _name, string _id, string _pw, string _tel, string _email, int _age, string _grade = "Bronze", int _point = 0, vector<int> _last_time = null) {
+	member(string _name, string _id, string _pw, string _tel, string _email, int _age, string _grade = "Bronze", int _point = 0, int _pay_cnt = 0, int _start_time_hour = -1, int _start_time_min = -1, int _start_time_sec = -1, int _left_time_hour = -1, int _left_time_min = -1, int _left_time_sec = -1) {
 		name = _name;
 		tel = _tel;
 		id = _id;
@@ -419,7 +667,13 @@ public:
 		age = _age;
 		grade = _grade;
 		point = _point;
-		last_time = _last_time;
+		pay_cnt = _pay_cnt;
+		start_time_hour = _start_time_hour;
+		start_time_min = _start_time_min;
+		start_time_sec = _start_time_sec;
+		left_time_hour = _left_time_hour;
+		left_time_min = _left_time_min;
+		left_time_sec = _left_time_sec;
 	}
 	member(const member& u) {
 		name = u.name;
@@ -430,7 +684,13 @@ public:
 		age = u.age;
 		grade = u.grade;
 		point = u.point;
-		last_time = u.last_time;
+		pay_cnt = u.pay_cnt;
+		start_time_hour = u.start_time_hour;
+		start_time_min = u.start_time_min;
+		start_time_sec = u.start_time_sec;
+		left_time_hour = u.left_time_hour;
+		left_time_min = u.left_time_min;
+		left_time_sec = u.left_time_sec;
 	}
 	~member() {
 		name.clear();
@@ -439,7 +699,13 @@ public:
 		pw.clear();
 		email.clear();
 		grade.clear();
-		last_time.erase(last_time.begin(), last_time.end());
+		start_time_hour = -1;
+		start_time_min = -1;
+		start_time_sec = -1;
+		left_time_hour = -1;
+		left_time_min = -1;
+		left_time_sec = -1;
+		pay_cnt = 0;
 		age = 0;
 		point = 0;
 	}
@@ -453,6 +719,7 @@ public:
 		cout << "적립 포인트: " << point << endl;
 		cout << "Tel: " << tel << endl;
 		cout << "E-mail: " << email << endl;
+		cout << "남은 시간: " << left_time_hour << ":" << left_time_min << ":" << left_time_sec << endl;
 	}
 
 	string GetName() { return name; }
@@ -463,12 +730,13 @@ public:
 	string GetGrade() { return grade; }
 	int GetAge() { return age; }
 	int GetPoint() { return point; }
-	int Get_Last_Year() { return last_time[0]; }
-	int Get_Last_Month() { return last_time[1]; }
-	int Get_Last_Day() { return last_time[2]; }
-	int Get_Last_Hour() { return last_time[3]; }
-	int Get_Last_Min() { return last_time[4]; }
-	int Get_Last_Sec() { return last_time[5]; }
+	int GetPayCnt() { return pay_cnt; }
+	int GetSTH() { return start_time_hour; }
+	int GetSTM() { return start_time_min; }
+	int GetSTS() { return start_time_sec; }
+	int GetLTH() { return left_time_hour; }
+	int GetLTM() { return left_time_min; }
+	int GetLTS() { return left_time_sec; }
 
 	void SetId(string _id) { id = _id; }
 	void SetPw(string _pw) { pw = _pw; }
@@ -478,12 +746,13 @@ public:
 	void SetGrade(string _grade) { grade = _grade; }
 	void SetAge(int _age) { age = _age; }
 	void SetPoint(int _point) { point = _point; }
-	void Set_Last_Year(int _y) { last_time[0] = _y; }
-	void Set_Last_Month(int _mo) { last_time[1] = _mo; }
-	void Set_Last_Day(int _d) { last_time[2] = _d; }
-	void Set_Last_Hour(int _h) { last_time[3] = _h; }
-	void Set_Last_Min(int _mi) { last_time[4] = _mi;}
-	void Set_Last_Sec(int _s) { last_time[5] = _s; }
+	void SetPayCnt(int _pay_cnt) { pay_cnt = _pay_cnt; }
+	void SetSTH(int _start_time_hour) { start_time_hour = _start_time_hour; }
+	void SetSTM(int _start_time_min) { start_time_min = _start_time_min; }
+	void SetSTS(int _start_time_sec) { start_time_sec = _start_time_sec; }
+	void SetLTH(int _left_time_hour) { left_time_hour = _left_time_hour; }
+	void SetLTM(int _left_time_min) { left_time_min = _left_time_min; }
+	void SetLTS(int _left_time_sec) { left_time_sec = _left_time_sec; }
 
 	void DelId() { id.clear(); }
 	void DelPw() { pw.clear(); }
@@ -493,12 +762,13 @@ public:
 	void DelGrade() { grade.clear(); }
 	void DelAge() { age = 0; }
 	void DelPoint() { point = 0; }
-	void Del_Last_Year() { last_time[0] = 0; }
-	void Del_Last_Month() { last_time[1] = 0; }
-	void Del_Last_Day() { last_time[2] = 0; }
-	void Del_Last_Hour() { last_time[3] = 0; }
-	void Del_Last_Min() { last_time[4] = 0; }
-	void Del_Last_Sec() { last_time[5] = 0; }
+	void DelPayCnt() { pay_cnt = 0; }
+	void DelSTH() { start_time_hour = -1; }
+	void DelSTM() { start_time_hour = -1; }
+	void DelSTS() { start_time_sec = -1; }
+	void DelLTH() { left_time_hour = -1; }
+	void DelLTM() { left_time_min = -1; }
+	void DelLTS() { left_time_sec = -1; }
 
 };
 ```
