@@ -25,7 +25,6 @@
 #include "member.h"
 #include <fstream>
 #include <sstream>
-#include <thread>
 #include <vector>
 #include <ctime>
 
@@ -45,6 +44,11 @@ void Get_Message_to_Admin(); // 카운터로 온 메신저 확인하기
 void Get_Message(string id); // 카운터에서 온 메신저 확인하기
 void Send_Message_to_Admin(string id); // 카운터로 메신저 보내기
 void Send_Message(vector<member>& m); // 카운터에서 메신저 보내기
+void Display_menu(); // 메뉴판 출력
+void Order_Foods(string id); // 음식 주문하기
+void Get_Order(); // 주문 확인하기
+void Check_Reservation(vector<member>& m); // 예약 확인하기
+void Request_For_Reservation(string id, vector<member>& m); // 예약 신청하기
 int Get_Current_Year(); // 현재 년도 불러오기
 int Get_Current_Month(); // 현재 월 불러오기
 int Get_Current_Day(); // 현재 일 불러오기
@@ -216,8 +220,12 @@ home:
 			}
 			else if (sel == 4) {
 
+				Get_Order();
+
 			}
 			else if(sel == 5){
+
+				Check_Reservation(u);
 
 			}
 			else if(sel == 6){
@@ -226,6 +234,8 @@ home:
 
 			}
 			else {
+
+				cout << "해당 선택지가 존재하지 않습니다." << endl;
 
 			}
 
@@ -542,6 +552,125 @@ void Send_Message(vector<member>& m) {
 
 }
 
+void Display_menu() {
+
+	cout << "---------- 메뉴판 ----------" << endl;
+	cout << "<라면>" << endl;
+	cout << "진라면(순)  진라면(맵)  신라면  신라면블랙  삼양라면  열라면  짜파게티  너구리  불닭볶음면  까르보불닭볶음면  진짬뽕" << endl;
+	cout << "<컵밥>" << endl;
+	cout << "치킨마요  불닭마요  참치마요  스팸마요  스팸참치  치킨스팸  불닭스팸  치킨불닭스팸마요" << endl;
+	cout << "<치킨>" << endl;
+	cout << "한마리치킨  반마리치킨  반반치킨  닭강정  (양념: 후라이드, 양념, 까르보, 간장, 마늘)" << endl;
+	cout << "<음료 - 주류는 카운터에서 신분증 확인 후 만 19세 이상부터 주문 가능합니다.>" << endl;
+	cout << "코카콜라  펩시  칠성사이다  스프라이트  환타오렌지  환타파인에플  참이슬  처음처럼  카스  테라" << endl;
+
+}
+
+void Order_Foods(string id) {
+
+	ofstream order("order.txt", ios_base::app);
+
+	string buffer;
+
+	Display_menu();
+
+	cout << endl << "주문 내용을 적어주세요." << endl << ">> ";
+	cin >> buffer;
+
+	order << id << buffer << endl;
+
+	order.close();
+
+}
+
+void Get_Order() {
+
+	ifstream order("Order.txt");
+
+	string buffer;
+
+	while (getline(order, buffer)) {
+
+		cout << buffer << endl;
+
+	}
+
+	order.close();
+
+	ofstream clean("Order.txt", ios_base::out);
+
+	string clear = "";
+
+	clean << clear;
+
+	clean.close();
+
+}
+
+void Check_Reservation(vector<member>& m) {
+
+	ifstream reservation("Reservation.txt");
+
+	string buffer;
+
+	while (getline(reservation, buffer)) {
+
+		int accept;
+		cout << buffer << endl;
+		cout << "예약 허가 하시겠습니까?(yes = 1, no = 0)" << endl << ">> ";
+		cin >> accept;
+		if (accept == 1) {
+			vector<string> result = split(buffer, ' ');
+			for (int i = 0; i < m.size(); i++) {
+
+				if (m[i].GetName() == result[0] && m[i].GetId() == result[1]) {
+					m[i].SetReservation(stoi(result[2]));
+					cout << "예약이 완료되었습니다." << endl;
+					break;
+				}
+
+			}
+		}
+		else {
+
+			cout << "예약을 거부하였습니다." << endl;
+
+		}
+
+	}
+
+	reservation.close();
+
+	string clean = "";
+	ofstream reservation_end("Reservation.txt", ios_base::out);
+	reservation_end << clean;
+	reservation_end.close();
+
+}
+
+void Request_For_Reservation(string id, vector<member>& m) {
+
+	ofstream reservation("Reservation.txt", ios_base::out);
+
+	string buffer = "";
+	string name, num;
+
+	cout << "신청자의 이름과 좌석 번호를 입력하시오." << endl;
+	cout << "이름: ";
+	cin >> name;
+	cout << "좌석 번호: ";
+	cin >> num;
+
+	buffer += name;
+	buffer += " ";
+	buffer += num;
+
+	reservation << buffer << endl;
+
+	reservation.close();
+
+}
+
 member new_Member() {
 
 	string name, id, pw, email, tel;
@@ -654,11 +783,12 @@ class member {
 	int age, point, pay_cnt;
 	int left_time_hour, left_time_min, left_time_sec;
 	int start_time_hour, start_time_min, start_time_sec;
+	int reservation;
 
 public:
 
 	member() {}
-	member(string _name, string _id, string _pw, string _tel, string _email, int _age, string _grade = "Bronze", int _point = 0, int _pay_cnt = 0, int _start_time_hour = -1, int _start_time_min = -1, int _start_time_sec = -1, int _left_time_hour = -1, int _left_time_min = -1, int _left_time_sec = -1) {
+	member(string _name, string _id, string _pw, string _tel, string _email, int _age, string _grade = "Bronze", int _point = 0, int _pay_cnt = 0, int _start_time_hour = -1, int _start_time_min = -1, int _start_time_sec = -1, int _left_time_hour = -1, int _left_time_min = -1, int _left_time_sec = -1, int _reservation = -1) {
 		name = _name;
 		tel = _tel;
 		id = _id;
@@ -674,6 +804,7 @@ public:
 		left_time_hour = _left_time_hour;
 		left_time_min = _left_time_min;
 		left_time_sec = _left_time_sec;
+		reservation = _reservation;
 	}
 	member(const member& u) {
 		name = u.name;
@@ -691,6 +822,7 @@ public:
 		left_time_hour = u.left_time_hour;
 		left_time_min = u.left_time_min;
 		left_time_sec = u.left_time_sec;
+		reservation = u.reservation;
 	}
 	~member() {
 		name.clear();
@@ -705,6 +837,7 @@ public:
 		left_time_hour = -1;
 		left_time_min = -1;
 		left_time_sec = -1;
+		reservation = -1;
 		pay_cnt = 0;
 		age = 0;
 		point = 0;
@@ -737,6 +870,7 @@ public:
 	int GetLTH() { return left_time_hour; }
 	int GetLTM() { return left_time_min; }
 	int GetLTS() { return left_time_sec; }
+	int GetReservation() { return reservation; }
 
 	void SetId(string _id) { id = _id; }
 	void SetPw(string _pw) { pw = _pw; }
@@ -753,6 +887,7 @@ public:
 	void SetLTH(int _left_time_hour) { left_time_hour = _left_time_hour; }
 	void SetLTM(int _left_time_min) { left_time_min = _left_time_min; }
 	void SetLTS(int _left_time_sec) { left_time_sec = _left_time_sec; }
+	void SetReservation(int _reservation) { reservation = _reservation; }
 
 	void DelId() { id.clear(); }
 	void DelPw() { pw.clear(); }
@@ -769,6 +904,7 @@ public:
 	void DelLTH() { left_time_hour = -1; }
 	void DelLTM() { left_time_min = -1; }
 	void DelLTS() { left_time_sec = -1; }
+	void DelReservation() { reservation = -1; }
 
 };
 ```
