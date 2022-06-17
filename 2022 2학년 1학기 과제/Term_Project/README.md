@@ -39,8 +39,10 @@ void Save_Members_Data(vector<member>& m); // 데이터 저장
 void Grading_Members(vector<member>& m); // 회원 등급 설정
 void Time_Set_Members(vector<member>& m); // 회원 시간 정렬
 void Time_Pass_Members(vector<member>& m); // 회원 남은 시간 설정
+void Time_Pass_non_Members(vector<n_member>& m); // 비회원 남은 시간 설정
 void Time_Dispaly_Members(vector<member>& m); // 회원 남은 시간 출력
 void Time_Display_non_Members(vector<n_member>& n); // 비회원 남은 시간 출력
+void Time_Display_non_Member(string name, vector<n_member>& n); // 비회원 개인 남은 시간 출력
 void Get_Message_to_Admin(); // 카운터로 온 메신저 확인하기
 void Get_Message(string id); // 카운터에서 온 메신저 확인하기
 void Send_Message_to_Admin(string id); // 카운터로 메신저 보내기
@@ -244,6 +246,8 @@ home:
 
 				Time_Pass_Members(u);
 				Time_Dispaly_Members(u);
+				Time_Pass_non_Members(n_u);
+				Time_Display_non_Members(n_u);
 
 			}
 			else if (sel == 2) {
@@ -289,16 +293,51 @@ home:
 			cout << "---------- ΩOhm PC 사용자 화면 ----------" << endl;
 			cout << "※비회원 이용자는 음식 주문 및 제자리 결제, 자리 이동 및 외출 또는 예약기능, 카운터 문의(메신저) 기능을 사용하실 수 없습니다." << endl;
 			cout << "1. 남은 시간 확인" << endl;
-			cout << "2. 로그아웃" << endl;
+			cout << "2. 메뉴 확인" << endl;
+			cout << "3. 로그아웃" << endl;
 			cout << ">> ";
 			cin >> sel;
 
 			if (sel == 1) {
 
+				string name;
+
+				cout << "<비회원 남은 시간 확인>" << endl;
+				cout << "이름: " << endl;
+				cin >> name;
+
+				system("cls");
+
+				Time_Display_non_Member(name, n_u);
+
+			}
+			else if (sel == 3) {
+
+				string name;
+
+				cout << "<로그아웃 - 비회원은 시간이 저장되지 않습니다.>" << endl;
+				cout << "이름: " << endl;
+				cin >> name;
+
+				for (int i = 0; i < n_u.size(); i++) {
+					
+					if (name == n_u[i].GetName()) {
+
+						cout << name << "님 로그아웃 합니다." << endl;
+						Sleep(1000);
+						system("cls");
+						state = 0;
+						break;
+
+					}
+
+				}
+
 			}
 			else if (sel == 2) {
 
-				state = 0;
+				cout << "비회원은 메뉴 확인만 가능합니다. 주문은 카운터에서 부탁드립니다." << endl;
+				Display_menu();
 
 			}
 			else {
@@ -470,12 +509,8 @@ void Time_Pass_Members(vector<member>& m) {
 
 	for (int i = 0; i < m.size(); i++) {
 
-		long long int pass_hour = Get_Current_Hour() - m[i].GetSTH();
-		long long int pass_min = Get_Current_Min() - m[i].GetSTM();
-		long long int pass_sec = Get_Current_Sec() - m[i].GetSTS();
-
-		long long int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
-		long long int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
+		int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
+		int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
 
 		if (pass_time >= left_time) {
 
@@ -494,20 +529,40 @@ void Time_Pass_Members(vector<member>& m) {
 
 }
 
+void Time_Pass_non_Members(vector<n_member>& n) {
+
+	for (int i = 0; i < n.size(); i++) {
+
+		int left_time = (n[i].GetLTH() * 3600) + (n[i].GetLTM() * 60) + n[i].GetLTS();
+		int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((n[i].GetSTH() * 3600) + (n[i].GetSTM() * 60) + n[i].GetSTS());
+
+		if (pass_time >= left_time) {
+
+			n[i].DelSTH();
+			n[i].DelSTM();
+			n[i].DelSTS();
+			n[i].DelLTH();
+			n[i].DelLTM();
+			n[i].DelLTS();
+
+			cout << n[i].GetName() << "님의 사용 시간이 종료되었습니다." << endl;
+
+		}
+
+	}
+
+}
+
 void Time_Dispaly_Members(vector<member>& m) {
 
-	cout << "<남은 시간>" << endl;
+	cout << "<회원 남은 시간>" << endl;
 
 	for (int i = 0; i < m.size(); i++) {
 
-		int pass_hour = Get_Current_Hour() - m[i].GetSTH();
-		int pass_min = Get_Current_Min() - m[i].GetSTM();
-		int pass_sec = Get_Current_Sec() - m[i].GetSTS();
+		int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
+		int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
 
-		long long int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
-		long long int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
-
-		long long int time = left_time - pass_time;
+		int time = left_time - pass_time;
 		
 		cout << "id: " << m[i].GetId() << "  " << time / 3600 << ":" << (time % 3600) / 60 << time % 60 << endl;
 
@@ -517,7 +572,37 @@ void Time_Dispaly_Members(vector<member>& m) {
 
 void Time_Display_non_Members(vector<n_member>& n) {
 
+	cout << endl << "<비회원 남은 시간>" << endl;
 
+	for (int i = 0; i < n.size(); i++) {
+
+		int left_time = (n[i].GetLTH() * 3600) + (n[i].GetLTM() * 60) + n[i].GetLTS();
+		int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((n[i].GetSTH() * 3600) + (n[i].GetSTM() * 60) + n[i].GetSTS());
+
+		int time = left_time - pass_time;
+
+		cout << "id: " << n[i].GetName() << "  " << time / 3600 << ":" << (time % 3600) / 60 << time % 60 << endl;
+
+	}
+
+}
+
+void Time_Display_non_Member(string name, vector<n_member>& n) {
+
+	for (int i = 0; i < n.size(); i++) {
+
+		if (name == n[i].GetName()) {
+
+			int left_time = (n[i].GetLTH() * 3600) + (n[i].GetLTM() * 60) + n[i].GetLTS();
+			int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((n[i].GetSTH() * 3600) + (n[i].GetSTM() * 60) + n[i].GetSTS());
+
+			int time = left_time - pass_time;
+
+			cout << name << "님의 남은 사용 시간은 " << time / 3600 << ":" << (time % 3600) / 60 << time % 60 << " 입니다." << endl;
+
+		}
+
+	}
 
 }
 
