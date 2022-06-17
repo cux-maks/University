@@ -477,8 +477,6 @@ void Read_Save_Data(vector<member>& m) {
 
 				m.push_back(temp);
 
-				m[i].DispInfo();
-
 			}
 
 		}
