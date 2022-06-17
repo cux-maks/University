@@ -40,7 +40,8 @@ void Grading_Members(vector<member>& m); // 회원 등급 설정
 void Time_Set_Members(vector<member>& m); // 회원 시간 정렬
 void Time_Pass_Members(vector<member>& m); // 회원 남은 시간 설정
 void Time_Pass_non_Members(vector<n_member>& m); // 비회원 남은 시간 설정
-void Time_Dispaly_Members(vector<member>& m); // 회원 남은 시간 출력
+void Time_Display_Members(vector<member>& m); // 회원 남은 시간 출력
+void Time_Display_Member(string id, vector<member>& m); // 개인 회원 남은 시간 출력
 void Time_Display_non_Members(vector<n_member>& n); // 비회원 남은 시간 출력
 void Time_Display_non_Member(string name, vector<n_member>& n); // 비회원 개인 남은 시간 출력
 void Get_Message_to_Admin(); // 카운터로 온 메신저 확인하기
@@ -52,6 +53,8 @@ void Order_Foods(string id); // 음식 주문하기
 void Get_Order(); // 주문 확인하기
 void Check_Reservation(vector<member>& m); // 예약 확인하기
 void Request_For_Reservation(string id, vector<member>& m); // 예약 신청하기
+void Away(string id, vector<member>& m); // 자리비룸
+void Shift(string id, vector<member>& m); // 자리 이동하기
 int Get_Current_Year(); // 현재 년도 불러오기
 int Get_Current_Month(); // 현재 월 불러오기
 int Get_Current_Day(); // 현재 일 불러오기
@@ -245,7 +248,7 @@ home:
 			if (sel == 1) {
 
 				Time_Pass_Members(u);
-				Time_Dispaly_Members(u);
+				Time_Display_Members(u);
 				Time_Pass_non_Members(n_u);
 				Time_Display_non_Members(n_u);
 
@@ -351,11 +354,54 @@ home:
 	}
 	else if(state == 1) { // 회원 사용 화면
 
-			cout << "---------- ΩOhm PC 사용자 화면 ----------" << endl;
+		do {
 
+			int sel;
+
+			cout << "---------- ΩOhm PC 사용자 화면 ----------" << endl;
+			cout << "1. 남은 시간 확인" << endl;
+			cout << "2. 메뉴 확인 및 주문" << endl;
+			cout << "3. 자리 이동" << endl;
+			cout << "4. 카운터에 메시지 보내기" << endl;
+			cout << "5. 자리비움 or 자리로 돌아옴" << endl;
+			cout << "6. 로그아웃" << endl;
+			cin >> sel;
+
+			if (sel == 1) {
+
+				Time_Display_Member(id_input, u);
+
+			}
+			else if (sel == 2) {
+
+				Order_Foods(id_input);
+
+			}
+			else if (sel == 3) {
+
+				Shift(id_input, u);
+
+			}
+			else if (sel == 4) {
+
+				Send_Message_to_Admin(id_input);
+
+			}
+			else if (sel == 5) {
+
+				Away(id_input, u);
+
+			}
+			else if (sel == 6) {
+
+				state = 0;
+
+			}
+
+		} while (state != 0);
 	}
 
-	if (admin_login == -1) {
+	if (admin_login == -1 || state == 0) {
 
 		goto home;
 
@@ -553,7 +599,7 @@ void Time_Pass_non_Members(vector<n_member>& n) {
 
 }
 
-void Time_Dispaly_Members(vector<member>& m) {
+void Time_Display_Members(vector<member>& m) {
 
 	cout << "<회원 남은 시간>" << endl;
 
@@ -565,6 +611,25 @@ void Time_Dispaly_Members(vector<member>& m) {
 		int time = left_time - pass_time;
 		
 		cout << "id: " << m[i].GetId() << "  " << time / 3600 << ":" << (time % 3600) / 60 << time % 60 << endl;
+
+	}
+
+}
+
+void Time_Display_Member(string id, vector<member>& m) {
+
+	for (int i = 0; i < m.size(); i++) {
+
+		if (id == m[i].GetName()) {
+
+			int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
+			int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
+
+			int time = left_time - pass_time;
+
+			cout << id << "(" << m[i].GetName() << ")님의 남은 사용 시간은 " << time / 3600 << ":" << (time % 3600) / 60 << time % 60 << " 입니다." << endl;
+
+		}
 
 	}
 
@@ -824,6 +889,59 @@ void Request_For_Reservation(string id, vector<member>& m) {
 
 }
 
+void Shift(string id, vector<member>& m) {
+
+	int ok = 0;
+
+	while (ok == 0) {
+
+		int num;
+
+		cout << "자리 번호: ";
+		cin >> num;
+
+		for (int i = 0; i < m.size(); i++) {
+
+			if (num == m[i].GetReservation()) {
+
+				cout << "이미 사용중이거나 예약된 자리 입니다." << endl;
+				cout << "다른 자리를 선택해주세요." << endl;
+				Sleep(1000);
+				system("cls");
+				break;
+
+			}
+
+			if (i >= m.size()) {
+
+				m[i].SetReservation(num);
+				cout << "자리이동이 완료되었습니다." << endl;
+				Sleep(1000);
+				system("cls");
+				ok = 1;
+
+			}
+
+		}
+	}
+
+}
+
+void Away(string id, vector<member>& m) {
+
+	for (int i = 0; i < m.size(); i++) {
+		if (id == m[i].GetId()) {
+			if (m[i].GetAway() == 0) {
+				m[i].SetAway(1);
+			}
+			else {
+				m[i].SetAway(0);
+			}
+		}
+	}
+
+}
+
 member new_Member() {
 
 	string name, id, pw, email, tel;
@@ -922,6 +1040,7 @@ int Get_Current_Sec() {
 
 ###### \<member.h\>
 ```c++
+#pragma warning(disable: 26495)
 #pragma once
 
 #include <iostream>
@@ -937,6 +1056,7 @@ class member {
 	int left_time_hour, left_time_min, left_time_sec;
 	int start_time_hour, start_time_min, start_time_sec;
 	int reservation;
+	bool away = 0;
 
 public:
 
@@ -1006,6 +1126,7 @@ public:
 		cout << "Tel: " << tel << endl;
 		cout << "E-mail: " << email << endl;
 		cout << "남은 시간: " << left_time_hour << ":" << left_time_min << ":" << left_time_sec << endl;
+		cout << "현재 상태: " << (away ? "사용중" : "자리비움") << endl;
 	}
 
 	string GetName() { return name; }
@@ -1024,6 +1145,7 @@ public:
 	int GetLTM() { return left_time_min; }
 	int GetLTS() { return left_time_sec; }
 	int GetReservation() { return reservation; }
+	bool GetAway() { return away; }
 
 	void SetId(string _id) { id = _id; }
 	void SetPw(string _pw) { pw = _pw; }
@@ -1041,6 +1163,7 @@ public:
 	void SetLTM(int _left_time_min) { left_time_min = _left_time_min; }
 	void SetLTS(int _left_time_sec) { left_time_sec = _left_time_sec; }
 	void SetReservation(int _reservation) { reservation = _reservation; }
+	void SetAway(bool _away) { away = _away; }
 
 	void DelId() { id.clear(); }
 	void DelPw() { pw.clear(); }
@@ -1051,6 +1174,7 @@ public:
 	void DelAge() { age = 0; }
 	void DelPoint() { point = 0; }
 	void DelPayCnt() { pay_cnt = 0; }
+	void DelAway() { away = 0; }
 	void DelSTH() { start_time_hour = -1; }
 	void DelSTM() { start_time_hour = -1; }
 	void DelSTS() { start_time_sec = -1; }
@@ -1064,6 +1188,7 @@ public:
 
 ###### \<non_member.h\>
 ```c++
+#pragma warning(disable: 26495)
 #pragma once
 
 #include <iostream>
