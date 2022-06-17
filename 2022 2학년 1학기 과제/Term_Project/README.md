@@ -709,7 +709,7 @@ void Time_Display_Member(string id, vector<member>& m) {
 
 	for (int i = 0; i < m.size(); i++) {
 
-		if (id == m[i].GetId()) {
+		if (id == m[i].GetId() && m[i].GetLTH() != -1) {
 
 			int left_time = (m[i].GetLTH() * 3600) + (m[i].GetLTM() * 60) + m[i].GetLTS();
 			int pass_time = ((Get_Current_Hour() * 3600) + (Get_Current_Min() * 60) + Get_Current_Sec()) - ((m[i].GetSTH() * 3600) + (m[i].GetSTM() * 60) + m[i].GetSTS());
@@ -718,6 +718,9 @@ void Time_Display_Member(string id, vector<member>& m) {
 			cout << left_time << " " << pass_time << " " << time << endl;
 			cout << id << "(" << m[i].GetId() << ")님의 남은 사용 시간은 " << time / 3600 << ":" << (time % 3600) / 60 << ":" << time % 60 << " 입니다." << endl;
 
+		}
+		else {
+			cout << id << "(" << m[i].GetId() << ")님의 남은 사용 시간은 " << 0 << " 입니다." << endl;
 		}
 
 	}
